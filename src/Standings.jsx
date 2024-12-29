@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import './App.css'
 // import jsonData from "../test.json"
 
-function App() {
+function Standings() {
   const [data,setData] = useState([]);
 
   useEffect(() => {
@@ -26,9 +26,11 @@ function App() {
     setData([...data].sort((a,b) => a[key] < b[key] ? i : -i));
   }
 
+  console.log("Data in App.jsx");
+  console.log(data);
+
   return (
     <>
-      <h1>NFL Wins Pool</h1>
       <table>
         <thead>
           <tr>
@@ -63,9 +65,8 @@ function App() {
   )
 }
 
-// TODO: check timeliness of links
 function imgPath(abbrev,year=2024){
     return `/logos/${abbrev.toLowerCase()}-${year}.png`;
 }
 
-export default App
+export default Standings
