@@ -1,68 +1,74 @@
 import { useState, useEffect } from 'react'
 
-// const data = [
-//     { abbrev: 'KAN', team: 'Kansas City Chiefs', pick: '1', owner: 'Keshav', wins: '15' },
-//     { abbrev: 'NWE', team: 'New England Patriots', pick: '2', owner: 'Noah', wins: '12' },
-//     { abbrev: 'SFO', team: 'San Francisco 49ers', pick: '3', owner: 'Ajay', wins: '10' },
-//     { abbrev: 'RAI', team: 'Las Vegas Raiders', pick: '4', owner: 'Jake', wins: '8' },
-//     { abbrev: 'CIN', team: 'Las Vegas Raiders', pick: '4', owner: 'Rikhav', wins: '8' }
-// ];
-
 function LogoTable(){
     const [data,setData] = useState([]);
+    const [sorted,setSorted] = useState({key:null,dir:"asc"});
+    const [winsDict,setWinsDict] = useState([]);
+    const [maxWins, setMaxWins] = useState(0);
 
     useEffect(() => {
         // Fetch teams data from the API
         fetch('http://localhost:5001/api/standings')
           .then(response => response.json())
+          .then(data => data.sort((a,b) => a.pick - b.pick))
+          .then(data => {
+                let max = 0;
+                let temp = {};
+                const newData = data.reduce((acc, team) => {
+                    temp[team.abbrev] = team.wins;
+                    if (!acc[team.owner]) {
+                        acc[team.owner] = { wins: 0, teams: [] };
+                    }
+                    let w = parseInt(team.wins)
+                    max = Math.max(w,max);
+                    acc[team.owner].wins += w;  // Sum the wins
+                    acc[team.owner].teams.push(team.abbrev);        // Collect team names
+                    return acc;
+                }, {});
+                setMaxWins(max);
+                setWinsDict(temp);
+                return newData;
+            })
+          .then(data => Object.entries(data).map(([owner, { wins, teams }]) => ({
+                owner,
+                wins,
+                teams: teams.join(' ')
+            })))
+          .then(data => data.sort((a,b) => b.wins - a.wins))
           .then(data => setData(data))
           .catch(error => console.error('Error fetching data:', error));
       }, []);
 
-    if(data.length == 0) return;
 
-    // Step 1: Sort the data by "pick"
-    data.sort((a, b) => a.pick - b.pick);
+    function handleSort(key){
+        let dir = "desc";
+        if(sorted.key == key && sorted.dir == "desc"){
+          dir = "asc";
+        } 
+        setSorted({key,dir});
+        let i = dir == "asc" ? 1 : -1;
+        setData([...data].sort((a,b) => a[key] < b[key] ? i : -i));
+      }
 
-    // Step 2: Group by "owner"
-    const grouped = data.reduce((acc, team) => {
-        if (!acc[team.owner]) {
-            acc[team.owner] = { wins: 0, teams: [] };
-        }
-        acc[team.owner].wins += parseInt(team.wins);  // Sum the wins
-        acc[team.owner].teams.push(team.abbrev);        // Collect team names
-        return acc;
-    }, {});
-
-    // Step 3: Convert the grouped data into an array
-    const result = Object.entries(grouped).map(([owner, { wins, teams }]) => ({
-        owner,
-        wins,
-        teams: teams.join(' ')
-    }));
-
-    // Step 4: Sort by "wins" in descending order
-    result.sort((a, b) => b.wins - a.wins);
-        
-    console.log("Result:");
-    console.log(result);
     return (
         <>
         <table className="LogoTable">
             <thead>
                 <tr>
-                    <th>Owner</th>
-                    <th>Wins</th>
+                    <th onClick={() => handleSort("owner")}>Owner</th>
+                    <th onClick={() => handleSort("wins")}>Wins</th>
                     <th>Teams</th>
                 </tr>
             </thead>
             <tbody>
-                {result.map((item,index) => (
+                {data.map((item,index) => (
                     <tr key={index}>
                         <td>{item.owner}</td>
                         <td>{item.wins}</td>
-                        <td>{item.teams.split(' ').map((abbrev,idx) => <img key={idx} src={imgPath(abbrev)} alt={abbrev + " Logo"} width={50}></img>)}</td>
-                        {/* <td>{item.record}</td> */}
+                        <td>{item.teams.split(' ').map((abbrev,idx) => 
+                            <img key={idx} src={imgPath(abbrev)} alt={abbrev + " Logo"} width={50*winsDict[abbrev]/maxWins}></img>
+                            )}
+                        </td>
                     </tr>
                 ))}
             </tbody>

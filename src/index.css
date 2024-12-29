@@ -37,6 +37,9 @@ h1 {
 
 table {
   background-color:#5c5c5c;
+  align-self: center;
+  max-width: 350px;
+  min-width: 30vw;
 }
 
 tr {
