@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import LogoTable from './LogoTable';
 // import jsonData from "../test.json"
 
 function App() {
@@ -26,9 +27,13 @@ function App() {
     setData([...data].sort((a,b) => a[key] < b[key] ? i : -i));
   }
 
+  console.log("Data in App.jsx");
+  console.log(data);
+
   return (
     <>
       <h1>NFL Wins Pool</h1>
+      <LogoTable />
       <table>
         <thead>
           <tr>
