@@ -1,12 +1,23 @@
-const data = [
-    { abbrev: 'KAN', team: 'Kansas City Chiefs', pick: '1', owner: 'Keshav', wins: '15' },
-    { abbrev: 'NWE', team: 'New England Patriots', pick: '2', owner: 'Noah', wins: '12' },
-    { abbrev: 'SFO', team: 'San Francisco 49ers', pick: '3', owner: 'Ajay', wins: '10' },
-    { abbrev: 'RAI', team: 'Las Vegas Raiders', pick: '4', owner: 'Jake', wins: '8' },
-    { abbrev: 'CIN', team: 'Las Vegas Raiders', pick: '4', owner: 'Rikhav', wins: '8' }
-];
+import { useState, useEffect } from 'react'
+
+// const data = [
+//     { abbrev: 'KAN', team: 'Kansas City Chiefs', pick: '1', owner: 'Keshav', wins: '15' },
+//     { abbrev: 'NWE', team: 'New England Patriots', pick: '2', owner: 'Noah', wins: '12' },
+//     { abbrev: 'SFO', team: 'San Francisco 49ers', pick: '3', owner: 'Ajay', wins: '10' },
+//     { abbrev: 'RAI', team: 'Las Vegas Raiders', pick: '4', owner: 'Jake', wins: '8' },
+//     { abbrev: 'CIN', team: 'Las Vegas Raiders', pick: '4', owner: 'Rikhav', wins: '8' }
+// ];
 
 function LogoTable(){
+    const [data,setData] = useState([]);
+
+    useEffect(() => {
+        // Fetch teams data from the API
+        fetch('http://localhost:5001/api/standings')
+          .then(response => response.json())
+          .then(data => setData(data))
+          .catch(error => console.error('Error fetching data:', error));
+      }, []);
 
     if(data.length == 0) return;
 

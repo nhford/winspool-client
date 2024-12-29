@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import LogoTable from './LogoTable';
 // import jsonData from "../test.json"
 
-function App() {
+function Standings() {
   const [data,setData] = useState([]);
 
   useEffect(() => {
@@ -32,8 +31,6 @@ function App() {
 
   return (
     <>
-      <h1>NFL Wins Pool</h1>
-      <LogoTable />
       <table>
         <thead>
           <tr>
@@ -68,9 +65,8 @@ function App() {
   )
 }
 
-// TODO: check timeliness of links
 function imgPath(abbrev,year=2024){
     return `/logos/${abbrev.toLowerCase()}-${year}.png`;
 }
 
-export default App
+export default Standings
