@@ -6,12 +6,10 @@ dotenv.config();
 const {Pool} = pkg;
 // import { Client } from 'pg';
 
+const connection = `postgresql://nhford:${process.env.PASSWORD}@winspool-6621.j77.aws-us-east-1.cockroachlabs.cloud:26257/winspool?sslmode=verify-full`;
+
 const pool = new Pool({
-    host: process.env.HOST,
-    port: process.env.PORT,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
+    connectionString: connection
   });  
 
 const relation = "standings";

@@ -6,7 +6,7 @@ function LogoTable(){
     const [winsDict,setWinsDict] = useState([]);
     const [maxWins, setMaxWins] = useState(0);
 
-    const connection = '/api/fetch';
+    const connection = 'api/fetch';
 
     useEffect(() => {
         // Fetch teams data from the API
