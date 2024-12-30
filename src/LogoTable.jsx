@@ -11,8 +11,10 @@ function LogoTable(){
     useEffect(() => {
         // Fetch teams data from the API
         fetch(connection)
-          .then(response => response.json())
-          .then(data => data.sort((a,b) => a.pick - b.pick))
+          .then(async response => {
+            return await response.json()})
+          .then(data => {
+            return data.data.sort((a,b) => a.pick - b.pick);})
           .then(data => {
                 let max = 0;
                 let temp = {};

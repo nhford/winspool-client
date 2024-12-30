@@ -1,12 +1,15 @@
-import { Client } from 'pg';
+import pkg from 'pg'
+
+const {Client} = pkg;
+// import { Client } from 'pg';
 
 const client = new Client({
-    host: import.meta.env.HOST,
-    port: import.meta.env.PORT,              
-    user: import.meta.env.USER,       
-    password: import.meta.env.PASSWORD,
-    database: import.meta.env.DATABASE
-  });
+    host: process.env.VITE_HOST,
+    port: process.env.VITE_PORT,
+    user: process.env.VITE_USER,
+    password: process.env.VITE_PASSWORD,
+    database: process.env.VITE_DATABASE,
+  });  
 
 const relation = "standings";
 
