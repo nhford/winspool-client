@@ -9,6 +9,7 @@ import LogoTable from './LogoTable';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <h1>Wins Pool</h1>
+    {`Last updated: ${new Date().toISOString().slice(0, 10)}`}
     <h2>Current Standings</h2>
     <LogoTable />
     <h2>Full Draft</h2>
