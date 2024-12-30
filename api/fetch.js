@@ -3,10 +3,10 @@ import dotenv from 'dotenv'
 
 dotenv.config();
 
-const {Client} = pkg;
+const {Pool} = pkg;
 // import { Client } from 'pg';
 
-const client = new Client({
+const pool = new Pool({
     host: process.env.HOST,
     port: process.env.PORT,
     user: process.env.USER,
@@ -20,13 +20,13 @@ const relation = "standings";
 export default async function handler(_, res) {
   try {
     // Connect to the database
-    await client.connect();
+    const client = await pool.connect();
 
     // Perform your query
     const result = await client.query(`SELECT * FROM ${relation}`);
 
     // Close the database connection
-    await client.end();
+    client.release();
 
     res.status(200).json({ data: result.rows });
   } catch (error) {
