@@ -1,14 +1,17 @@
 import pkg from 'pg'
+import dotenv from 'dotenv'
+
+dotenv.config();
 
 const {Client} = pkg;
 // import { Client } from 'pg';
 
 const client = new Client({
-    host: process.env.VITE_HOST,
-    port: process.env.VITE_PORT,
-    user: process.env.VITE_USER,
-    password: process.env.VITE_PASSWORD,
-    database: process.env.VITE_DATABASE,
+    host: process.env.HOST,
+    port: process.env.PORT,
+    user: process.env.USER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE,
   });  
 
 const relation = "standings";
