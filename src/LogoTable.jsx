@@ -67,9 +67,10 @@ function LogoTable(){
                     <tr key={index}>
                         <td>{item.owner}</td>
                         <td>{item.wins}</td>
-                        <td>{item.teams.split(' ').map((abbrev,idx) => 
-                            <img key={idx} src={imgPath(abbrev)} alt={abbrev + " Logo"} width={50*winsDict[abbrev]/maxWins}></img>
-                            )}
+                        <td>{item.teams.split(' ').map((abbrev,idx) =>{
+                            const w = 50*winsDict[abbrev]/maxWins;
+                            return <img key={idx} src={imgPath(abbrev)} alt={abbrev + " Logo"} width={w} style={{ marginLeft: (50-w)/2, marginRight: (50-w)/2 }}></img>
+                        })}
                         </td>
                     </tr>
                 ))}
