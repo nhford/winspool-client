@@ -26,8 +26,6 @@ function Standings() {
     setData([...data].sort((a,b) => a[key] < b[key] ? i : -i));
   }
 
-  console.log("Data in App.jsx");
-  console.log(data);
 
   return (
     <>
