@@ -5,13 +5,13 @@ import './App.css'
 function Standings() {
   const [data,setData] = useState([]);
 
-  const connection = 'api/fetch'
+  const connection = 'http://localhost:5001/api/standings'
 
   useEffect(() => {
     // Fetch teams data from the API
     fetch(connection)
       .then(response => response.json())
-      .then(data => setData(data.data))
+      .then(data => setData(data))
       .catch(error => console.error('Error fetching data:', error));
   }, []);
 
