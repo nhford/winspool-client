@@ -26,7 +26,9 @@ export default async function handler(_, res) {
     // Close the database connection
     client.release();
 
-    res.status(200).json({ data: result.rows });
+    const fixed = result.rows.map(row => ({...row, pick_int: Number(row.pick)}))
+
+    res.status(200).json({ data: fixed });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
