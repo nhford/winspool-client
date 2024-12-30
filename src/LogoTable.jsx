@@ -6,13 +6,13 @@ function LogoTable(){
     const [winsDict,setWinsDict] = useState([]);
     const [maxWins, setMaxWins] = useState(0);
 
-    const connection = 'http://localhost:5001/api/standings';
+    const connection = 'api/fetch';
 
     useEffect(() => {
         // Fetch teams data from the API
         fetch(connection)
           .then(response => response.json())
-          .then(data => data.sort((a,b) => a.pick - b.pick))
+          .then(data => data.data.sort((a,b) => a.pick - b.pick))
           .then(data => {
                 let max = 0;
                 let temp = {};
