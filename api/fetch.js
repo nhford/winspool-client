@@ -12,9 +12,11 @@ const pool = new Pool({
     connectionString: connection
   });  
 
-const relation1 = "standings";
+const relation1 = "nfl_standings";
 
-const relation2 = 'ownersh2h';
+const relation2 = 'nfl_ownersh2h';
+
+const nba_standings = 'nba_standings';
 
 
 export default async function handler(_, res) {
@@ -27,6 +29,8 @@ export default async function handler(_, res) {
 
     const h2h = await client.query(`SELECT * FROM ${relation2}`);
 
+    const nba_standings_result = await client.query(`SELECT * FROM ${nba_standings}`);
+
     // Close the database connection
     client.release();
 
@@ -34,26 +38,9 @@ export default async function handler(_, res) {
     
     const fixed = result.rows.map(row => ({...row, pick_int: Number(row.pick)}))
 
-    res.status(200).json({ data: fixed, h2h: h2h_clean });
+    res.status(200).json({ nfl_standings: fixed, h2h: h2h_clean, nba_standings: nba_standings_result.rows });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
-
-// function formatH2H(rows){
-//     return rows.map(row => {
-//         const values = Object.entries(row);
-//         return values.reduce((acc, [key, col], i) => {
-//             if (i === 0) {
-//                 acc[key] = col;
-//             } else {
-//                 acc[key] = String(col)
-//                     .slice(1, -1)
-//                     .split(',')
-//                     .map(x => parseInt(x));
-//             }
-//             return acc;
-//         }, {});
-//     });
-// }

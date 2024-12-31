@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import { handleSort } from './utils';
+import PropTypes from 'prop-types';
 // import jsonData from "../test.json"
 
-function Standings() {
+function Standings({sport}) {
   const [data,setData] = useState([]);
 
   const connection = 'api/fetch'
@@ -12,11 +13,11 @@ function Standings() {
     // Fetch teams data from the API
     fetch(connection)
       .then(response => response.json())
-      .then(data => setData(data.data))
+      .then(data => setData(data[`${sport}_standings`]))
       .catch(error => console.error('Error fetching data:', error));
   }, []);
 
-  const [sorted,setSorted] = useState({key:null,dir:"asc"});
+  const [sorted,setSorted] = useState({key:"pct",dir:"asc"});
   const [count, setCount] = useState(0);
 
   const sortingUtil = [sorted,setSorted,data,setData];
@@ -35,7 +36,7 @@ function Standings() {
         <tbody>
           {data.map((item,index) => (
           <tr key={index}>
-              <td><img src={imgPath(item.abbrev)} alt={item.abbrev + " Logo"} width={50}></img></td>
+              <td><img src={imgPath(sport,item.abbrev)} alt={item.abbrev + " Logo"} width={50}></img></td>
               <td>{item.team}</td>
               <td>{parseInt(item.pick)}</td>
               <td>{item.owner}</td>
@@ -57,8 +58,12 @@ function Standings() {
   )
 }
 
-function imgPath(abbrev,year=2024){
-    return `/logos/${abbrev.toLowerCase()}-${year}.png`;
+Standings.PropTypes = {
+  sport : PropTypes.string.isRequired,
+}
+
+function imgPath(sport,abbrev,year=2024){
+    return `/logos/${sport}/${abbrev.toLowerCase()}-${year}.png`;
 }
 
 export default Standings
