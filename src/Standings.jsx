@@ -58,7 +58,7 @@ function Standings({sport}) {
   )
 }
 
-Standings.PropTypes = {
+Standings.propTypes = {
   sport : PropTypes.string.isRequired,
 }
 

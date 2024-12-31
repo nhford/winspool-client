@@ -74,7 +74,7 @@ function LogoTable({sport}){
     )
 }
 
-LogoTable.PropTypes = {
+LogoTable.propTypes = {
     sport : PropTypes.string.isRequired,
   }
 
