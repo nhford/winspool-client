@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { handleSort } from './utils';
 
 function LogoTable(){
     const [data,setData] = useState([]);
@@ -41,24 +42,15 @@ function LogoTable(){
           .catch(error => console.error('Error fetching data:', error));
       }, []);
 
-
-    function handleSort(key){
-        let dir = "desc";
-        if(sorted.key == key && sorted.dir == "desc"){
-          dir = "asc";
-        } 
-        setSorted({key,dir});
-        let i = dir == "asc" ? 1 : -1;
-        setData([...data].sort((a,b) => a[key] < b[key] ? i : -i));
-      }
+    const sortingUtil = [sorted,setSorted,data,setData];
 
     return (
         <>
         <table className="LogoTable">
             <thead>
                 <tr>
-                    <th onClick={() => handleSort("owner")}>Owner</th>
-                    <th onClick={() => handleSort("wins")}>Wins</th>
+                    <th onClick={() => handleSort("owner",sortingUtil)}>Owner</th>
+                    <th onClick={() => handleSort("wins",sortingUtil,"asc")}>Wins</th>
                     <th>Teams</th>
                 </tr>
             </thead>

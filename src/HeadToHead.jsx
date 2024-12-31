@@ -44,10 +44,6 @@ function HeadtoHead(){
           .catch(error => console.error('Error fetching data:', error));
       }, []);
 
-    function pct(key){
-
-    }
-
 
     function handleSort(key){
         let dir = "desc";
@@ -58,7 +54,6 @@ function HeadtoHead(){
         let i = dir == "asc" ? 1 : -1;
         setData([...data].sort((a,b) => {
             const records = [a,b].map(row => row[key].split('-').map(x => parseInt(x,10)));
-            console.log(records);
             const rest = records.map(record => record.slice(1).reduce((acc,e) => acc + e, 0));
             const [pct1,pct2] = records.map((record,i) => rest[i] > 0 ? (record[0] / (record[0] + rest[i])) : 0)
             return pct1 > pct2 ? i : -i
