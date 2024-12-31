@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import { handleSort } from './utils';
 // import jsonData from "../test.json"
 
 function Standings() {
@@ -18,26 +19,17 @@ function Standings() {
   const [sorted,setSorted] = useState({key:null,dir:"asc"});
   const [count, setCount] = useState(0);
 
-  function handleSort(key){
-    let dir = "desc";
-    if(sorted.key == key && sorted.dir == "desc"){
-      dir = "asc";
-    } 
-    setSorted({key,dir});
-    let i = dir == "asc" ? 1 : -1;
-    setData([...data].sort((a,b) => a[key] < b[key] ? i : -i));
-  }
-
+  const sortingUtil = [sorted,setSorted,data,setData];
 
   return (
     <>
       <table>
         <thead>
           <tr>
-            <th colSpan={2} onClick={() => handleSort("team")}>Team</th>
-            <th onClick={() => handleSort("pick_int")}>Pick</th>
-            <th onClick={() => handleSort("owner")}>Owner</th>
-            <th onClick={() => handleSort("pct")}>Record</th>
+            <th colSpan={2} onClick={() => handleSort("team",sortingUtil)}>Team</th>
+            <th onClick={() => handleSort("pick_int",sortingUtil)}>Pick</th>
+            <th onClick={() => handleSort("owner",sortingUtil)}>Owner</th>
+            <th onClick={() => handleSort("pct",sortingUtil,"asc")}>Record</th>
           </tr>
         </thead>
         <tbody>
