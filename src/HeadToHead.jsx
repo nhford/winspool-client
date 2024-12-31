@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { handleSort } from './utils';
 
 function HeadtoHead(){
     const [data,setData] = useState([]);
@@ -44,8 +45,9 @@ function HeadtoHead(){
           .catch(error => console.error('Error fetching data:', error));
       }, []);
 
+    const sortingUtil = [sorted,setSorted,data,setData];
 
-    function handleSort(key){
+    function recordSort(key){
         let dir = "desc";
         if(sorted.key == key && sorted.dir == "desc"){
           dir = "asc";
@@ -66,7 +68,7 @@ function HeadtoHead(){
             <table className="HeadtoHeadTable">
                 <thead>
                     <tr>
-                        {labels.map((label,i) => <th key={i} onClick={() => handleSort(headers[i])}>{label}</th>)}
+                        {labels.map((label,i) => <th key={i} onClick={() => i == 0 ? handleSort(headers[i],sortingUtil) : recordSort(headers[i])}>{label}</th>)}
                     </tr>
                 </thead>
                 <tbody>
