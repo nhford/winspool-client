@@ -15,7 +15,7 @@ function Standings({sport}) {
       .then(response => response.json())
       .then(data => setData(data[`${sport}_standings`]))
       .catch(error => console.error('Error fetching data:', error));
-  }, []);
+  }, [sport]);
 
   const [sorted,setSorted] = useState({key:"pct",dir:"asc"});
   const [count, setCount] = useState(0);
