@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import {Signature, Likes} from './Footer.jsx'
 import {PopUp} from './PopUp.jsx'
-import {Body} from './Body.jsx'
+import Body from './Body.jsx'
 
 
 createRoot(document.getElementById('root')).render(
