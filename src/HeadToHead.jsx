@@ -14,26 +14,6 @@ function HeadtoHead(){
         fetch(connection)
           .then(response => response.json())
           .then(data => data.h2h)
-        //   .then(data => {
-        //         data.forEach(row => {
-        //             const cols = Object.keys(row);
-        //             cols.forEach((col,i) => {
-        //                 if(i > 0){
-        //                     const record = row[col];
-        //                     if(record.slice(-1) != '0') setTies(true)
-        //                 }
-        //             })
-        //         });
-        //         return data;
-        //     })
-        //   .then(data => Object.entries(data).map(([_, { owner, vs_Ajay, vs_Keshav, vs_Noah, vs_Rikhav }]) => ({
-        //         owner,
-        //         vs_Ajay,
-        //         vs_Keshav,
-        //         vs_Noah,
-        //         vs_Rikhav
-        //     })))
-        //   .then(data => data.sort((a,b) => b.wins - a.wins))
           .then(data => {
                         const headers = Object.keys(data[0]); 
                         setHeaders(headers);
