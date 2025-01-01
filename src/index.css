@@ -54,6 +54,7 @@ img {
 th {
   padding-right: .25em;
   padding-left: .25em;
+  cursor: pointer;
 }
 
 button {

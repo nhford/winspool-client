@@ -19,7 +19,7 @@ function Standings({sport}) {
   }, [sport]);
 
   const [sorted,setSorted] = useState({key:"pct",dir:"asc"});
-  
+
   const sortingUtil = [sorted,setSorted,data,setData];
 
   const toggleExpand = (rowId) => {
@@ -41,7 +41,7 @@ function Standings({sport}) {
         <tbody>
           {data.map((row,index) => (
             <React.Fragment key={index}>
-              <tr>
+              <tr style={{ cursor: "pointer" }} onClick={() => toggleExpand(index)}>
                 <td><img src={imgPath(sport,row.abbrev)} alt={row.abbrev + " Logo"} width={50}></img></td>
                 <td>{row.team}</td>
                 <td>{parseInt(row.pick)}</td>
