@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { handleSort } from './utils';
+import PropTypes from 'prop-types';
 
-function HeadtoHead(){
+function HeadtoHead({sport}){
     const [data,setData] = useState([]);
     const [sorted,setSorted] = useState({key:"vs_Noah",dir:"desc"});
     const [headers,setHeaders] = useState([]);
@@ -13,7 +14,7 @@ function HeadtoHead(){
         // Fetch teams data from the API
         fetch(connection)
           .then(response => response.json())
-          .then(data => data.h2h)
+          .then(data => data[`${sport}_h2h`])
           .then(data => {
                         const headers = Object.keys(data[0]); 
                         setHeaders(headers);
@@ -23,7 +24,7 @@ function HeadtoHead(){
                         }));
                         setData(data);})
           .catch(error => console.error('Error fetching data:', error));
-      }, []);
+      }, [sport]);
 
     const sortingUtil = [sorted,setSorted,data,setData];
 
@@ -65,8 +66,8 @@ function HeadtoHead(){
     )
 }
 
-// function imgPath(abbrev,year=2024){
-//     return `/logos/${abbrev.toLowerCase()}-${year}.png`;
-// }
+HeadtoHead.propTypes = {
+    sport : PropTypes.string.isRequired,
+  }
 
 export default HeadtoHead;
