@@ -12,9 +12,11 @@ const pool = new Pool({
     connectionString: connection
   });  
 
-const relation1 = "standings";
+const nfl_standings = "nfl_standings";
 
-const relation2 = 'ownersh2h';
+const nfl_h2h = 'nfl_ownersh2h';
+
+const nba_standings = 'nba_standings';
 
 
 export default async function handler(_, res) {
@@ -23,37 +25,24 @@ export default async function handler(_, res) {
     const client = await pool.connect();
 
     // Perform your query
-    const result = await client.query(`SELECT * FROM ${relation1}`);
+    const nfl_standings_result = await client.query(`SELECT * FROM ${nfl_standings}`);
 
-    const h2h = await client.query(`SELECT * FROM ${relation2}`);
+    const nfl_h2h_result = await client.query(`SELECT * FROM ${nfl_h2h}`);
+
+    const nba_standings_result = await client.query(`SELECT * FROM ${nba_standings}`);
 
     // Close the database connection
     client.release();
 
-    const h2h_clean = h2h.rows;
+    const nfl_h2h_final = nfl_h2h_result.rows;
     
-    const fixed = result.rows.map(row => ({...row, pick_int: Number(row.pick)}))
+    const nfl_std_final = nfl_standings_result.rows.map(row => ({...row, pick_int: Number(row.pick)}))
 
-    res.status(200).json({ data: fixed, h2h: h2h_clean });
+    const nba_std_final = nba_standings_result.rows.map(row => ({...row, pick_int: Number(row.pick)}))
+
+    res.status(200).json({ nfl_standings: nfl_std_final, h2h: nfl_h2h_final, nba_standings: nba_std_final });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
-
-// function formatH2H(rows){
-//     return rows.map(row => {
-//         const values = Object.entries(row);
-//         return values.reduce((acc, [key, col], i) => {
-//             if (i === 0) {
-//                 acc[key] = col;
-//             } else {
-//                 acc[key] = String(col)
-//                     .slice(1, -1)
-//                     .split(',')
-//                     .map(x => parseInt(x));
-//             }
-//             return acc;
-//         }, {});
-//     });
-// }

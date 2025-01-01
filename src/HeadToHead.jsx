@@ -3,7 +3,7 @@ import { handleSort } from './utils';
 
 function HeadtoHead(){
     const [data,setData] = useState([]);
-    const [sorted,setSorted] = useState({key:null,dir:"desc"});
+    const [sorted,setSorted] = useState({key:"vs_Noah",dir:"desc"});
     const [headers,setHeaders] = useState([]);
     const [labels,setLabels] = useState([]);
 

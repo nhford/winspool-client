@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { handleSort } from './utils';
+import PropTypes from 'prop-types';
 
-function LogoTable(){
+function LogoTable({sport}){
     const [data,setData] = useState([]);
-    const [sorted,setSorted] = useState({key:null,dir:"asc"});
+    const [sorted,setSorted] = useState({key:"wins",dir:"asc"});
     const [winsDict,setWinsDict] = useState([]);
     const [maxWins, setMaxWins] = useState(0);
 
@@ -13,7 +14,8 @@ function LogoTable(){
         // Fetch teams data from the API
         fetch(connection)
           .then(response => response.json())
-          .then(data => data.data.sort((a,b) => a.pick - b.pick))
+          .then(data => data[`${sport}_standings`])
+          .then(data => data.sort((a,b) => a.pick - b.pick))
           .then(data => {
                 let max = 0;
                 let temp = {};
@@ -40,7 +42,7 @@ function LogoTable(){
           .then(data => data.sort((a,b) => b.wins - a.wins))
           .then(data => setData(data))
           .catch(error => console.error('Error fetching data:', error));
-      }, []);
+      }, [sport]);
 
     const sortingUtil = [sorted,setSorted,data,setData];
 
@@ -61,7 +63,7 @@ function LogoTable(){
                         <td>{item.wins}</td>
                         <td>{item.teams.split(' ').map((abbrev,idx) =>{
                             const w = 50*winsDict[abbrev]/maxWins;
-                            return <img key={idx} src={imgPath(abbrev)} alt={abbrev + " Logo"} width={w} style={{ marginLeft: (50-w)/2, marginRight: (50-w)/2 }}></img>
+                            return <img key={idx} src={imgPath(sport,abbrev)} alt={abbrev + " Logo"} width={w} style={{ marginLeft: (50-w)/2, marginRight: (50-w)/2 }}></img>
                         })}
                         </td>
                     </tr>
@@ -72,8 +74,12 @@ function LogoTable(){
     )
 }
 
-function imgPath(abbrev,year=2024){
-    return `/logos/${abbrev.toLowerCase()}-${year}.png`;
+LogoTable.propTypes = {
+    sport : PropTypes.string.isRequired,
+  }
+
+function imgPath(sport,abbrev,year=2024){
+    return `/logos/${sport}/${abbrev.toLowerCase()}-${year}.png`;
 }
 
 export default LogoTable;
