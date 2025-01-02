@@ -18,6 +18,8 @@ const nfl_h2h = 'nfl_ownersh2h';
 
 const nba_standings = 'nba_standings';
 
+const nba_h2h = 'nba_ownersh2h';
+
 
 export default async function handler(_, res) {
   try {
@@ -31,16 +33,21 @@ export default async function handler(_, res) {
 
     const nba_standings_result = await client.query(`SELECT * FROM ${nba_standings}`);
 
+    const nba_h2h_result = await client.query(`SELECT * FROM ${nba_h2h}`);
+
+
     // Close the database connection
     client.release();
 
     const nfl_h2h_final = nfl_h2h_result.rows;
+
+    const nba_h2h_final = nba_h2h_result.rows;
     
     const nfl_std_final = nfl_standings_result.rows.map(row => ({...row, pick_int: Number(row.pick)}))
 
     const nba_std_final = nba_standings_result.rows.map(row => ({...row, pick_int: Number(row.pick)}))
 
-    res.status(200).json({ nfl_standings: nfl_std_final, h2h: nfl_h2h_final, nba_standings: nba_std_final });
+    res.status(200).json({ nfl_standings: nfl_std_final, nfl_h2h: nfl_h2h_final, nba_standings: nba_std_final, nba_h2h: nba_h2h_final });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });

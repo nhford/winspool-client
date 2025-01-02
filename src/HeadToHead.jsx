@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { handleSort } from './utils';
+import PropTypes from 'prop-types';
 
-function HeadtoHead(){
+function HeadtoHead({sport}){
     const [data,setData] = useState([]);
     const [sorted,setSorted] = useState({key:"vs_Noah",dir:"desc"});
     const [headers,setHeaders] = useState([]);
@@ -13,27 +14,7 @@ function HeadtoHead(){
         // Fetch teams data from the API
         fetch(connection)
           .then(response => response.json())
-          .then(data => data.h2h)
-        //   .then(data => {
-        //         data.forEach(row => {
-        //             const cols = Object.keys(row);
-        //             cols.forEach((col,i) => {
-        //                 if(i > 0){
-        //                     const record = row[col];
-        //                     if(record.slice(-1) != '0') setTies(true)
-        //                 }
-        //             })
-        //         });
-        //         return data;
-        //     })
-        //   .then(data => Object.entries(data).map(([_, { owner, vs_Ajay, vs_Keshav, vs_Noah, vs_Rikhav }]) => ({
-        //         owner,
-        //         vs_Ajay,
-        //         vs_Keshav,
-        //         vs_Noah,
-        //         vs_Rikhav
-        //     })))
-        //   .then(data => data.sort((a,b) => b.wins - a.wins))
+          .then(data => data[`${sport}_h2h`])
           .then(data => {
                         const headers = Object.keys(data[0]); 
                         setHeaders(headers);
@@ -43,7 +24,7 @@ function HeadtoHead(){
                         }));
                         setData(data);})
           .catch(error => console.error('Error fetching data:', error));
-      }, []);
+      }, [sport]);
 
     const sortingUtil = [sorted,setSorted,data,setData];
 
@@ -85,8 +66,8 @@ function HeadtoHead(){
     )
 }
 
-// function imgPath(abbrev,year=2024){
-//     return `/logos/${abbrev.toLowerCase()}-${year}.png`;
-// }
+HeadtoHead.propTypes = {
+    sport : PropTypes.string.isRequired,
+  }
 
 export default HeadtoHead;

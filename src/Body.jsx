@@ -12,7 +12,7 @@ export default function Body(){
         <h2>Current Standings</h2>
         <LogoTable sport={sport}/>
         <h2>Head to Head</h2>
-        <HeadtoHead />
+        <HeadtoHead sport={sport}/>
         <h2>Full Draft</h2>
         <Standings sport={sport}/>
       </>
