@@ -7,9 +7,9 @@ import PropTypes from 'prop-types';
 function Standings({sport}) {
   const [data,setData] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
+  const [sorted,setSorted] = useState({key:"pct",dir:"asc"});
 
   const connection = 'api/fetch'
-
   useEffect(() => {
     // Fetch teams data from the API
     fetch(connection)
@@ -18,12 +18,11 @@ function Standings({sport}) {
       .catch(error => console.error('Error fetching data:', error));
   }, [sport]);
 
-  const [sorted,setSorted] = useState({key:"pct",dir:"asc"});
 
   const sortingUtil = [sorted,setSorted,data,setData];
 
-  const toggleExpand = (rowId) => {
-    setExpandedRow(expandedRow === rowId ? null : rowId); // Toggle expanded row
+  const toggleExpand = (rowIndex) => {
+    setExpandedRow(expandedRow === rowIndex ? null : rowIndex); // Toggle expanded row
   };
 
   return (
@@ -61,6 +60,7 @@ function Standings({sport}) {
                 <td colSpan="6" style={{ padding: "10px", backgroundColor: "#f9f9f9" }}>
                   <div>
                     <strong>Details for {row.team}</strong>
+                    <p>Current Wins Pace: {row.wins_pace}</p>
                     <p>Preseason Over/Under: {row.ou}</p>
                     <p>Expected Wins by Draft Slot: {row.wins_exp}</p>
                   </div>
