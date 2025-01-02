@@ -96,27 +96,37 @@ function HeadtoHead({sport}){
                             </tr>
                             {expandedRow === row.owner && (
                                 <tr>
-                                <td colSpan="6" style={{ padding: "10px", backgroundColor: "#f9f9f9" }}>
-                                    <strong>{row.owner}&apos;s Teams</strong>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th onClick={() => handleSort('abbrev',sortingTeams)}>Team</th>
-                                                {labels.map((label,i) => i > 0 && <th key={i} onClick={() => recordSort(headers[i],sortingTeams)}>{label}</th>)}
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {teamData.filter(team => team.owner == expandedRow).map((team,i) => (
-                                                <tr key={i}>
-                                                    <img key={i} src={imgPath(sport,team.abbrev)} alt={team.abbrev + " Logo"} width={50}></img>
-                                                    {
-                                                        headers.map((col,i) => i > 0 && (<td key={i}>{team[col]}</td>))
-                                                    }
+                                    <td colSpan="6" style={{ padding: "0", backgroundColor: "black" }}>
+                                        <table style={{ width: "100%", borderCollapse: "collapse", borderColor:'black' }}>
+                                            <thead>
+                                                <tr>
+                                                    <th onClick={() => handleSort('abbrev', sortingTeams)}>Team</th>
+                                                    {labels.map((label, i) => i > 0 && (
+                                                        <th key={i} onClick={() => recordSort(headers[i], sortingTeams)}>
+                                                            {label}
+                                                        </th>
+                                                    ))}
+                                                    <th style={{cursor:'default'}}>{"+/-"}</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </td>
+                                            </thead>
+                                            <tbody>
+                                                {teamData.filter(team => team.owner === expandedRow).map((team, i) => (
+                                                    <tr key={i}>
+                                                        <td>
+                                                            <img
+                                                                key={i}
+                                                                src={imgPath(sport, team.abbrev)}
+                                                                alt={`${team.abbrev} Logo`}
+                                                                width={50}
+                                                            />
+                                                        </td>
+                                                        {headers.map((col, i) => i > 0 && (<td key={i}>{team[col]}</td>))}
+                                                        <td></td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </td>
                                 </tr>
                             )}
                         </React.Fragment>

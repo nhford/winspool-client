@@ -36,10 +36,28 @@ h1 {
 }
 
 table {
-  background-color:#5c5c5c;
+  background-color:rgb(130, 130, 130);
   align-self: center;
   max-width: max(375px,75vw);
-  min-width: max(375px,30vw);
+  min-width: max(375px,50vw);
+}
+
+table .innerH2H {
+  margin: 0; /* Remove extra space around the table */
+  border-spacing: 0; /* Remove gaps between table cells */
+  padding: 0; /* Remove internal padding */
+}
+
+td .innerH2H th, td .innerH2H td {
+  border: 1px solid black; /* Matches outer table borders */
+  padding: 5px; /* Adds consistent padding */
+}
+
+th .innerH2H table {
+  border: 1px solid black;
+  border-spacing: 2px;
+  padding: 2px;
+  margin: 2px;
 }
 
 tr {
