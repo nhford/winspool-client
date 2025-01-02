@@ -61,6 +61,7 @@ function Standings({sport}) {
                 <td colSpan="6" style={{ padding: "10px", backgroundColor: "#f9f9f9" }}>
                   <div>
                     <strong>Details for {row.team}</strong>
+                    <p>Current Wins Pace: {row.wins_pace}</p>
                     <p>Preseason Over/Under: {row.ou}</p>
                     <p>Expected Wins by Draft Slot: {row.wins_exp}</p>
                   </div>
