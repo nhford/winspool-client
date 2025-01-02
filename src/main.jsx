@@ -11,6 +11,6 @@ createRoot(document.getElementById('root')).render(
     <p>{`Last updated: ${new Date().toISOString().slice(0, 10)}`}</p>
     <Body />
     <Signature />
-    <Likes multiplier={2} />
+    <Likes multiplier={1} />
   </StrictMode>,
 )
