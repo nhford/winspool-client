@@ -35,7 +35,7 @@ function Standings({sport}) {
             <th onClick={() => handleSort("pick_int",sortingUtil)}>Pick</th>
             <th onClick={() => handleSort("owner",sortingUtil)}>Owner</th>
             <th onClick={() => handleSort("pct",sortingUtil,"asc")}>Record</th>
-            <th>+/-</th>
+            <th style={{cursor:'default'}}>+/-</th>
           </tr>
         </thead>
         <tbody>
@@ -48,7 +48,7 @@ function Standings({sport}) {
                 <td>{row.owner}</td>
                 <td>{row.record}</td>
                 <td>
-                  <button onClick={(e) => {
+                  <button className='expand' onClick={(e) => {
                     e.stopPropagation(); // Prevent triggering the row click
                     toggleExpand(index);
                   }}>

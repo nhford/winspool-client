@@ -8,7 +8,7 @@ import Body from './Body.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <h1>Wins Pool</h1>
-    <p>{`Last updated: ${new Date().toISOString().slice(0, 10)}`}</p>
+    <p>{`Last updated: ${new Date().toLocaleDateString().slice(0, 10)}`}</p>
     <Body />
     <Signature />
     <Likes multiplier={1} />
