@@ -41,10 +41,10 @@ function Standings({sport}) {
           {data.map((row,index) => (
             <React.Fragment key={index}>
               <tr style={{ cursor: "pointer" }} onClick={() => toggleExpand(index)}>
-                <td><img src={imgPath(sport,row.abbrev)} alt={row.abbrev + " Logo"} width={50}></img></td>
-                <td>{row.team}</td>
+                <td><img className='standingsLogo' src={imgPath(sport,row.abbrev)} alt={row.abbrev + " Logo"}></img></td>
+                <td className='teamName'>{row.team}</td>
                 <td>{parseInt(row.pick)}</td>
-                <td>{row.owner}</td>
+                <td className='ownerName'>{row.owner}</td>
                 <td>{row.record}</td>
                 <td>
                   <button className='expand' onClick={(e) => {

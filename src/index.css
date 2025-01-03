@@ -38,8 +38,8 @@ h1 {
 table {
   background-color:rgb(130, 130, 130);
   align-self: center;
-  max-width: max(375px,75vw);
-  min-width: max(375px,50vw);
+  max-width: max(350px,75vw);
+  min-width: max(350px,35vw);
 }
 
 table .innerH2H {
@@ -51,6 +51,10 @@ table .innerH2H {
 td .innerH2H th, td .innerH2H td {
   border: 1px solid black; /* Matches outer table borders */
   padding: 5px; /* Adds consistent padding */
+}
+
+td.teamName, td.ownerName {
+  font-size: min(16px,3.5vw);
 }
 
 th .innerH2H table {
@@ -67,6 +71,10 @@ tr {
 
 img {
   padding: .25em;
+}
+
+img.standingsLogo {
+  width: min(50px,8vw);
 }
 
 th {
