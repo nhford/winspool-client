@@ -17,7 +17,9 @@ a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
+  /* rel: "noopener noreferrer" */
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -35,11 +37,15 @@ h1 {
   line-height: 1.1;
 }
 
+h3 {
+  font-style: italic;
+}
+
 table {
   background-color:rgb(130, 130, 130);
   align-self: center;
   max-width: max(350px,75vw);
-  min-width: max(350px,35vw);
+  min-width: max(350px,60vw);
 }
 
 table .innerH2H {
@@ -77,10 +83,22 @@ img.standingsLogo {
   width: min(50px,8vw);
 }
 
+.icon {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  vertical-align: middle;
+  padding: 10px;
+}
+
 th {
   padding-right: .25em;
   padding-left: .25em;
   cursor: pointer;
+}
+
+.rules {
+  margin: 5px;
 }
 
 button {
