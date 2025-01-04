@@ -17,7 +17,6 @@ a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
-  /* rel: "noopener noreferrer" */
 }
 
 a:hover {
@@ -44,8 +43,7 @@ h3 {
 table {
   background-color:rgb(130, 130, 130);
   align-self: center;
-  max-width: max(350px,75vw);
-  min-width: max(350px,60vw);
+  width: max(350px,100%);
 }
 
 table .innerH2H {
