@@ -51,30 +51,32 @@ function LogoTable({sport}){
 
     return (
         <>
-        <table className="LogoTable">
-            <thead>
-                <tr>
-                    <th onClick={() => handleSort("owner",sortingUtil)}>Owner</th>
-                    <th onClick={() => handleSort("wins",sortingUtil,"asc")}>Wins</th>
-                    {/* <th onClick={() => handleSort("games",sortingUtil,"asc")}>Games</th> */}
-                    <th style={{cursor: 'default'}}>Teams</th>
-                </tr>
-            </thead>
-            <tbody>
-                {data.map((item,index) => (
-                    <tr key={index}>
-                        <td>{item.owner}</td>
-                        <td>{item.wins}</td>
-                        {/* <td>{item.games}</td> */}
-                        <td>{item.teams.split(' ').map((abbrev,idx) =>{
-                            const w = 50*winsDict[abbrev]/maxWins;
-                            return <img key={idx} src={imgPath(sport,abbrev)} alt={abbrev + " Logo"} width={w} style={{ marginLeft: (50-w)/2, marginRight: (50-w)/2 }}></img>
-                        })}
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
+            {data.length <= 0 ? <p>Loading..</p> : 
+                <table className="LogoTable">
+                    <thead>
+                        <tr>
+                            <th onClick={() => handleSort("owner",sortingUtil)}>Owner</th>
+                            <th onClick={() => handleSort("wins",sortingUtil,"asc")}>Wins</th>
+                            {/* <th onClick={() => handleSort("games",sortingUtil,"asc")}>Games</th> */}
+                            <th style={{cursor: 'default'}}>Teams</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map((item,index) => (
+                            <tr key={index}>
+                                <td>{item.owner}</td>
+                                <td>{item.wins}</td>
+                                {/* <td>{item.games}</td> */}
+                                <td>{item.teams.split(' ').map((abbrev,idx) =>{
+                                    const w = 50*winsDict[abbrev]/maxWins;
+                                    return <img key={idx} src={imgPath(sport,abbrev)} alt={abbrev + " Logo"} width={w} style={{ marginLeft: (50-w)/2, marginRight: (50-w)/2 }}></img>
+                                })}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            }
         </>
     )
 }
