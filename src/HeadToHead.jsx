@@ -8,6 +8,7 @@ function HeadtoHead({sport}){
     const [headers,setHeaders] = useState([]);
     const [labels,setLabels] = useState([]);
     const [expandedRow, setExpandedRow] = useState(null);
+    const [loading,setLoading] = useState(true);
 
     const [teamData, setTeamData] = useState([]);
     const [sort_key, setSort_Key] = useState({key: "vs_Noah",dir:"desc"}) // TODO: change to be best team
@@ -16,6 +17,7 @@ function HeadtoHead({sport}){
 
     useEffect(() => {
         // Fetch teams data from the API
+        setLoading(true);
         fetch(connection)
           .then(response => response.json())
           .then(data => data[`${sport}_h2h`])
@@ -37,6 +39,7 @@ function HeadtoHead({sport}){
                             return 'vs ' + x.split('_')[1];
                         }));
                         setData(data);})
+          .then(_ => setLoading(false))
           .catch(error => console.error('Error fetching data:', error));
       }, [sport]);
 
@@ -71,7 +74,7 @@ function HeadtoHead({sport}){
 
     return (
         <>
-            {data.length <= 0 ? <p>Loading..</p> : 
+            {loading ? <p>Loading..</p> : 
                 <table className="HeadtoHeadTable">
                     <thead>
                         <tr>

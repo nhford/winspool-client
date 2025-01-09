@@ -7,11 +7,13 @@ function LogoTable({sport}){
     const [sorted,setSorted] = useState({key:"wins",dir:"asc"});
     const [winsDict,setWinsDict] = useState([]);
     const [maxWins, setMaxWins] = useState(0);
+    const [loading,setLoading] = useState(true);
 
     const connection = 'api/fetch';
 
     useEffect(() => {
         // Fetch teams data from the API
+        setLoading(true);
         fetch(connection)
           .then(response => response.json())
           .then(data => data[`${sport}_standings`])
@@ -44,6 +46,7 @@ function LogoTable({sport}){
             })))
           .then(data => data.sort((a,b) => b.wins - a.wins))
           .then(data => setData(data))
+          .then(_ => setLoading(false))
           .catch(error => console.error('Error fetching data:', error));
       }, [sport]);
 
@@ -51,7 +54,7 @@ function LogoTable({sport}){
 
     return (
         <>
-            {data.length <= 0 ? <p>Loading..</p> : 
+            {loading ? <p>Loading..</p> : 
                 <table className="LogoTable">
                     <thead>
                         <tr>

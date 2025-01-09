@@ -8,13 +8,18 @@ function Standings({sport}) {
   const [data,setData] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
   const [sorted,setSorted] = useState({key:"pct",dir:"asc"});
+  const [loading,setLoading] = useState(true);
 
   const connection = 'api/fetch'
   useEffect(() => {
     // Fetch teams data from the API
+    setLoading(true);
     fetch(connection)
       .then(response => response.json())
-      .then(data => setData(data[`${sport}_standings`]))
+      .then(data => {
+        setData(data[`${sport}_standings`]);
+      })
+      .then(_ => setLoading(false))
       .catch(error => console.error('Error fetching data:', error));
   }, [sport]);
 
@@ -27,7 +32,7 @@ function Standings({sport}) {
 
   return (
     <>
-      {data.length <= 0 ? <p>Loading..</p> : 
+      {loading ? <p>Loading..</p> : 
         <table>
           <thead>
             <tr>
