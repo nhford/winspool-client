@@ -65,8 +65,8 @@ function LogoTable({sport}){
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((item,index) => (
-                            <tr key={index}>
+                        {data.map(item => (
+                            <tr key={item.owner}>
                                 <td>{item.owner}</td>
                                 <td>{item.wins}</td>
                                 {/* <td>{item.games}</td> */}

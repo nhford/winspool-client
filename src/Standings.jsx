@@ -45,7 +45,7 @@ function Standings({sport}) {
           </thead>
           <tbody>
             {data.map((row,index) => (
-              <React.Fragment key={index}>
+              <React.Fragment key={row.abbrev}>
                 <tr style={{ cursor: "pointer" }} onClick={() => toggleExpand(index)}>
                   <td><img className='standingsLogo' src={imgPath(sport,row.abbrev)} alt={row.abbrev + " Logo"}></img></td>
                   <td className='teamName'>{row.team}</td>

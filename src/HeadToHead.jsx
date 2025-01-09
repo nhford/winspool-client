@@ -83,9 +83,9 @@ function HeadtoHead({sport}){
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((row,index) => (
-                            <React.Fragment key={index}>
-                                <tr key={index} style={{ cursor: "pointer" }} onClick={() => toggleExpand(row.owner)}>
+                        {data.map(row => (
+                            <React.Fragment key={row.owner}>
+                                <tr key={row.owner} style={{ cursor: "pointer" }} onClick={() => toggleExpand(row.owner)}>
                                     {
                                         headers.map((col,i) => (<td key={i}>{row[col]}</td>))
                                     }
