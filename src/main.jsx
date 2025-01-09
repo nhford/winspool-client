@@ -10,7 +10,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <h1>Wins Pool Tracker</h1>
     <h3>Who wins from each and every win in the NFL and NBA</h3>
-    <p>{`Last updated: ${new Date().toLocaleDateString().slice(0, 10)} 2:00 AM`}</p>
+    <p>{`Last updated: ${new Date().toLocaleDateString().slice(0, 10)} 10:00 AM`}</p>
     <Body />
     <HowTo />
     <Signature />
