@@ -8,6 +8,7 @@ function HeadtoHead({sport}){
     const [headers,setHeaders] = useState([]);
     const [labels,setLabels] = useState([]);
     const [expandedRow, setExpandedRow] = useState(null);
+    const [loading,setLoading] = useState(true);
 
     const [teamData, setTeamData] = useState([]);
     const [sort_key, setSort_Key] = useState({key: "vs_Noah",dir:"desc"}) // TODO: change to be best team
@@ -16,6 +17,7 @@ function HeadtoHead({sport}){
 
     useEffect(() => {
         // Fetch teams data from the API
+        setLoading(true);
         fetch(connection)
           .then(response => response.json())
           .then(data => data[`${sport}_h2h`])
@@ -37,6 +39,7 @@ function HeadtoHead({sport}){
                             return 'vs ' + x.split('_')[1];
                         }));
                         setData(data);})
+          .then(_ => setLoading(false))
           .catch(error => console.error('Error fetching data:', error));
       }, [sport]);
 
@@ -71,68 +74,70 @@ function HeadtoHead({sport}){
 
     return (
         <>
-            <table className="HeadtoHeadTable">
-                <thead>
-                    <tr>
-                        {labels.map((label,i) => <th key={i} onClick={() => i == 0 ? handleSort(headers[i],sortingUtil) : recordSort(headers[i],sortingUtil)}>{label}</th>)}
-                        <th style={{cursor:'default'}}>+/-</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((row,index) => (
-                        <React.Fragment key={index}>
-                            <tr key={index} style={{ cursor: "pointer" }} onClick={() => toggleExpand(row.owner)}>
-                                {
-                                    headers.map((col,i) => (<td key={i}>{row[col]}</td>))
-                                }
-                                <td>
-                                <button className='expand' onClick={(e) => {
-                                        e.stopPropagation(); // Prevent triggering the row click
-                                        toggleExpand(row.owner);
-                                    }}>
-                                    {expandedRow === row.owner ? "-" : "+"}
-                                </button>
-                                </td>
-                            </tr>
-                            {expandedRow === row.owner && (
-                                <tr>
-                                    <td colSpan="6" style={{ padding: "0", backgroundColor: "black" }}>
-                                        <table style={{ width: "100%", borderCollapse: "collapse", borderColor:'black' }}>
-                                            <thead>
-                                                <tr>
-                                                    <th onClick={() => handleSort('abbrev', sortingTeams)}>Team</th>
-                                                    {labels.map((label, i) => i > 0 && (
-                                                        <th key={i} onClick={() => recordSort(headers[i], sortingTeams)}>
-                                                            {label}
-                                                        </th>
-                                                    ))}
-                                                    <th style={{cursor:'default'}}>{"+/-"}</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {teamData.filter(team => team.owner === expandedRow).map((team, i) => (
-                                                    <tr key={i}>
-                                                        <td>
-                                                            <img
-                                                                key={i}
-                                                                src={imgPath(sport, team.abbrev)}
-                                                                alt={`${team.abbrev} Logo`}
-                                                                width={50}
-                                                            />
-                                                        </td>
-                                                        {headers.map((col, i) => i > 0 && (<td key={i}>{team[col]}</td>))}
-                                                        <td></td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+            {loading ? <p>Loading..</p> : 
+                <table className="HeadtoHeadTable">
+                    <thead>
+                        <tr>
+                            {labels.map((label,i) => <th key={i} onClick={() => i == 0 ? handleSort(headers[i],sortingUtil) : recordSort(headers[i],sortingUtil)}>{label}</th>)}
+                            <th style={{cursor:'default'}}>+/-</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map(row => (
+                            <React.Fragment key={row.owner}>
+                                <tr key={row.owner} style={{ cursor: "pointer" }} onClick={() => toggleExpand(row.owner)}>
+                                    {
+                                        headers.map((col,i) => (<td key={i}>{row[col]}</td>))
+                                    }
+                                    <td>
+                                    <button className='expand' onClick={(e) => {
+                                            e.stopPropagation(); // Prevent triggering the row click
+                                            toggleExpand(row.owner);
+                                        }}>
+                                        {expandedRow === row.owner ? "-" : "+"}
+                                    </button>
                                     </td>
                                 </tr>
-                            )}
-                        </React.Fragment>
-                    ))}
-                </tbody>
-            </table>
+                                {expandedRow === row.owner && (
+                                    <tr>
+                                        <td colSpan="6" style={{ padding: "0", backgroundColor: "black" }}>
+                                            <table style={{ width: "100%", borderCollapse: "collapse", borderColor:'black' }}>
+                                                <thead>
+                                                    <tr>
+                                                        <th onClick={() => handleSort('abbrev', sortingTeams)}>Team</th>
+                                                        {labels.map((label, i) => i > 0 && (
+                                                            <th key={i} onClick={() => recordSort(headers[i], sortingTeams)}>
+                                                                {label}
+                                                            </th>
+                                                        ))}
+                                                        <th style={{cursor:'default'}}>{"+/-"}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {teamData.filter(team => team.owner === expandedRow).map((team, i) => (
+                                                        <tr key={i}>
+                                                            <td>
+                                                                <img
+                                                                    key={i}
+                                                                    src={imgPath(sport, team.abbrev)}
+                                                                    alt={`${team.abbrev} Logo`}
+                                                                    width={50}
+                                                                />
+                                                            </td>
+                                                            {headers.map((col, i) => i > 0 && (<td key={i}>{team[col]}</td>))}
+                                                            <td></td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                )}
+                            </React.Fragment>
+                        ))}
+                    </tbody>
+                </table>
+            }
         </>
     )
 }

@@ -7,11 +7,13 @@ function LogoTable({sport}){
     const [sorted,setSorted] = useState({key:"wins",dir:"asc"});
     const [winsDict,setWinsDict] = useState([]);
     const [maxWins, setMaxWins] = useState(0);
+    const [loading,setLoading] = useState(true);
 
     const connection = 'api/fetch';
 
     useEffect(() => {
         // Fetch teams data from the API
+        setLoading(true);
         fetch(connection)
           .then(response => response.json())
           .then(data => data[`${sport}_standings`])
@@ -44,6 +46,7 @@ function LogoTable({sport}){
             })))
           .then(data => data.sort((a,b) => b.wins - a.wins))
           .then(data => setData(data))
+          .then(_ => setLoading(false))
           .catch(error => console.error('Error fetching data:', error));
       }, [sport]);
 
@@ -51,30 +54,32 @@ function LogoTable({sport}){
 
     return (
         <>
-        <table className="LogoTable">
-            <thead>
-                <tr>
-                    <th onClick={() => handleSort("owner",sortingUtil)}>Owner</th>
-                    <th onClick={() => handleSort("wins",sortingUtil,"asc")}>Wins</th>
-                    {/* <th onClick={() => handleSort("games",sortingUtil,"asc")}>Games</th> */}
-                    <th style={{cursor: 'default'}}>Teams</th>
-                </tr>
-            </thead>
-            <tbody>
-                {data.map((item,index) => (
-                    <tr key={index}>
-                        <td>{item.owner}</td>
-                        <td>{item.wins}</td>
-                        {/* <td>{item.games}</td> */}
-                        <td>{item.teams.split(' ').map((abbrev,idx) =>{
-                            const w = 50*winsDict[abbrev]/maxWins;
-                            return <img key={idx} src={imgPath(sport,abbrev)} alt={abbrev + " Logo"} width={w} style={{ marginLeft: (50-w)/2, marginRight: (50-w)/2 }}></img>
-                        })}
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
+            {loading ? <p>Loading..</p> : 
+                <table className="LogoTable">
+                    <thead>
+                        <tr>
+                            <th onClick={() => handleSort("owner",sortingUtil)}>Owner</th>
+                            <th onClick={() => handleSort("wins",sortingUtil,"asc")}>Wins</th>
+                            {/* <th onClick={() => handleSort("games",sortingUtil,"asc")}>Games</th> */}
+                            <th style={{cursor: 'default'}}>Teams</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map(item => (
+                            <tr key={item.owner}>
+                                <td>{item.owner}</td>
+                                <td>{item.wins}</td>
+                                {/* <td>{item.games}</td> */}
+                                <td>{item.teams.split(' ').map((abbrev,idx) =>{
+                                    const w = 50*winsDict[abbrev]/maxWins;
+                                    return <img key={idx} src={imgPath(sport,abbrev)} alt={abbrev + " Logo"} width={w} style={{ marginLeft: (50-w)/2, marginRight: (50-w)/2 }}></img>
+                                })}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            }
         </>
     )
 }
