@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import './App.css'
 import { handleSort } from './utils';
 import PropTypes from 'prop-types';
-// import jsonData from "../test.json"
 
 function Standings({sport}) {
   const [data,setData] = useState([]);
