@@ -17,7 +17,9 @@ function Standings({sport}) {
     fetch(connection)
       .then(response => response.json())
       .then(data => {
-        setData(data[`${sport}_standings`]);
+        data = data[`${sport}_standings`];
+        data.sort((a,b) => a['pick_int'] < b['pick_int'] ? -1 : 1);
+        setData(data);
       })
       .then(_ => setLoading(false))
       .catch(error => console.error('Error fetching data:', error));
