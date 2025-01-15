@@ -46,7 +46,7 @@ function LogoTable({sport}){
             })))
           .then(data => data.sort((a,b) => b.wins - a.wins))
           .then(data => setData(data))
-          .then(_ => setLoading(false))
+          .then(() => setLoading(false))
           .catch(error => console.error('Error fetching data:', error));
       }, [sport]);
 
