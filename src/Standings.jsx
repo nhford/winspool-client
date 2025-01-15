@@ -20,7 +20,7 @@ function Standings({sport}) {
         data.sort((a,b) => a['pick_int'] < b['pick_int'] ? -1 : 1);
         setData(data);
       })
-      .then(_ => setLoading(false))
+      .then(() => setLoading(false))
       .catch(error => console.error('Error fetching data:', error));
   }, [sport]);
 
