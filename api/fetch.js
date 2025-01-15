@@ -6,7 +6,7 @@ dotenv.config();
 const {Pool} = pkg;
 // import { Client } from 'pg';
 
-const connection = `postgresql://postgres.lmlpzkztveanyhcvjhwy:${process.env.PASSWORD}@aws-0-us-east-1.pooler.supabase.com:6543/postgres`;
+const connection = `postgresql://postgres.${process.env.USER}:${process.env.PASSWORD}@aws-0-us-east-1.pooler.supabase.com:6543/postgres`;
 
 const pool = new Pool({
     connectionString: connection
