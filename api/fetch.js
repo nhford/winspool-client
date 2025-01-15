@@ -43,7 +43,6 @@ export default async function handler(_, res) {
     client.release();
 
     const updated_final = updated.rows;
-    updated_final.to
 
     const nfl_h2h_final = nfl_h2h_result.rows;
 
