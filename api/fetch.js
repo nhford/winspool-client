@@ -6,7 +6,7 @@ dotenv.config();
 const {Pool} = pkg;
 // import { Client } from 'pg';
 
-const connection = `postgresql://nhford:${process.env.PASSWORD}@winspool-6621.j77.aws-us-east-1.cockroachlabs.cloud:26257/winspool?sslmode=verify-full`;
+const connection = `postgresql://postgres.lmlpzkztveanyhcvjhwy:${process.env.PASSWORD}@aws-0-us-east-1.pooler.supabase.com:6543/postgres`;
 
 const pool = new Pool({
     connectionString: connection
