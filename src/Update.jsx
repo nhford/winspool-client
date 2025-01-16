@@ -8,37 +8,41 @@ async function fetchTime(){
     return data['updated'][0].time;
 }
 
-function useFetch(key, fetchFunction){
-    const [updated,setUpdated] = useState(null);
-
+function useFetch(key, fetchFunction, state, setState){
     useEffect(() => {
         const checkTime = async () => {
-            const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+            const date = new Date().toISOString().split("T"); 
+            const day = date[0];
+            const hour = date[1].split(':')[0]
             const cachedData = JSON.parse(localStorage.getItem(key));
 
             // If data exists and was fetched today, use it
-            if (cachedData && cachedData.date === today) {
-                setUpdated(cachedData.value);
+            if (cachedData && cachedData.day === day && cachedData.hour <= hour) {
+                setState(cachedData.value);
             } else {
                 // Fetch new data and update the cache
                 const fetchedValue = await fetchFunction();
-                setUpdated(fetchedValue);
-                localStorage.setItem(key, JSON.stringify({ date: today, value: fetchedValue }));
+                setState(fetchedValue);
+                localStorage.setItem(key, JSON.stringify({ day: day, hour: hour, value: fetchedValue }));
             }
         };
 
         checkTime();
       },[key,fetchFunction]);
 
-      return updated;
+      return state;
 }
 
 export default function Update(){
-    const lastUpdated = useFetch("updated",fetchTime)
+    const [updated,setUpdated] = useState(null);
+    useFetch("updated",fetchTime,updated,setUpdated);
 
-    if(!lastUpdated) return <p>Loading...</p>
+    // const output = localStorage.getItem("updated").value;
+    // console.log(output);
+
+    if(!updated) return <p>Loading...</p>
 
     return (
-        <p>{`Last updated: ${lastUpdated}`}</p>
+        <p>{`Last updated: ${updated}`}</p>
         );
 }
