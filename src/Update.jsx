@@ -37,9 +37,6 @@ export default function Update(){
     const [updated,setUpdated] = useState(null);
     useFetch("updated",fetchTime,updated,setUpdated);
 
-    // const output = localStorage.getItem("updated").value;
-    // console.log(output);
-
     if(!updated) return <p>Loading...</p>
 
     return (
