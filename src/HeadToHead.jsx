@@ -121,7 +121,7 @@ function HeadtoHead({sport}){
                                                                     key={i}
                                                                     src={imgPath(sport, team.abbrev)}
                                                                     alt={`${team.abbrev} Logo`}
-                                                                    width={50}
+                                                                    className='standingsLogo'
                                                                 />
                                                             </td>
                                                             {headers.map((col, i) => i > 0 && (<td key={i}>{team[col]}</td>))}
