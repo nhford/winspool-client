@@ -28,7 +28,7 @@ function HeadtoHead({sport}){
                         setTeamData(teams);
                         const ret = data
                             .filter(item => item.role === 'owner')
-                            .map(item => {const {abbrev, role, ...rest} = item; return rest;})
+                            .map(item => {const {...rest} = item; delete rest.abbrev; delete rest.role; return rest;})
                         return ret;
         })
           .then(data => {
@@ -39,7 +39,7 @@ function HeadtoHead({sport}){
                             return 'vs ' + x.split('_')[1];
                         }));
                         setData(data);})
-          .then(_ => setLoading(false))
+          .then(() => setLoading(false))
           .catch(error => console.error('Error fetching data:', error));
       }, [sport]);
 
