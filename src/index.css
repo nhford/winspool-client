@@ -47,7 +47,7 @@ h3 {
 table {
   background-color:rgb(130, 130, 130);
   align-self: center;
-  width: max(350px,100%);
+  width: 100%;
 }
 
 table .innerH2H {

@@ -60,7 +60,7 @@ function LogoTable({sport}){
                         <tr>
                             <th onClick={() => handleSort("owner",sortingUtil)}>Owner</th>
                             <th onClick={() => handleSort("wins",sortingUtil,"asc")}>Wins</th>
-                            {/* <th onClick={() => handleSort("games",sortingUtil,"asc")}>Games</th> */}
+                            <th onClick={() => handleSort("games",sortingUtil,"asc")}>Games</th>
                             <th style={{cursor: 'default'}}>Teams</th>
                         </tr>
                     </thead>
@@ -68,8 +68,9 @@ function LogoTable({sport}){
                         {data.map(item => (
                             <tr key={item.owner}>
                                 <td>{item.owner}</td>
+                                {/* <td>{`${item.wins}-${item.games - item.wins}`}</td> */}
                                 <td>{item.wins}</td>
-                                {/* <td>{item.games}</td> */}
+                                <td>{item.games}</td>
                                 <td>{item.teams.split(' ').map((abbrev,idx) =>{
                                     const w = 50*winsDict[abbrev]/maxWins;
                                     return <img key={idx} src={imgPath(sport,abbrev)} alt={abbrev + " Logo"} width={w} style={{ marginLeft: (50-w)/2, marginRight: (50-w)/2 }}></img>
