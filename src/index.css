@@ -13,10 +13,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-#root {
-  min-width: min(100%,775px);
-}
-
 a {
   font-weight: 500;
   color: #646cff;
@@ -31,6 +27,7 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
+  justify-content: center;
   min-width: 320px;
   min-height: 10vh;
 }
@@ -41,6 +38,8 @@ h1 {
 }
 
 h3 {
+  padding-left: 1rem;
+  padding-right: 1rem;
   font-style: italic;
 }
 
@@ -100,7 +99,8 @@ th {
 }
 
 .rules {
-  margin: 5px;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 button {
