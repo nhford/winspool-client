@@ -1,60 +1,75 @@
-import pkg from 'pg'
-import dotenv from 'dotenv'
+import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
-const {Pool} = pkg;
-// import { Client } from 'pg';
+const supabaseURL = process.env.SUPABASE_URL;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
-const connection = `postgresql://postgres.${process.env.USER}:${process.env.PASSWORD}@aws-0-us-east-1.pooler.supabase.com:6543/postgres`;
-
-const pool = new Pool({
-    connectionString: connection
-  });  
+const supabase = createClient(supabaseURL, supabaseAnonKey);
 
 const nfl_standings = "nfl_standings";
-
-const nfl_h2h = 'nfl_ownersh2h';
-
-const nba_standings = 'nba_standings';
-
-const nba_h2h = 'nba_ownersh2h';
-
-const update_time = 'update_time';
-
+const nfl_h2h = "nfl_ownersh2h";
+const nba_standings = "nba_standings";
+const nba_h2h = "nba_ownersh2h";
+const update_time = "update_time";
 
 export default async function handler(_, res) {
   try {
-    // Connect to the database
-    const client = await pool.connect();
+    // Fetch data from Supabase tables
+    const { data: nfl_standings_result, error: nfl_standings_error } = await supabase
+      .from(nfl_standings)
+      .select("*");
 
-    // Perform your query
-    const nfl_standings_result = await client.query(`SELECT * FROM ${nfl_standings}`);
+    const { data: nfl_h2h_result, error: nfl_h2h_error } = await supabase
+      .from(nfl_h2h)
+      .select("*");
 
-    const nfl_h2h_result = await client.query(`SELECT * FROM ${nfl_h2h}`);
+    const { data: nba_standings_result, error: nba_standings_error } = await supabase
+      .from(nba_standings)
+      .select("*");
 
-    const nba_standings_result = await client.query(`SELECT * FROM ${nba_standings}`);
+    const { data: nba_h2h_result, error: nba_h2h_error } = await supabase
+      .from(nba_h2h)
+      .select("*");
 
-    const nba_h2h_result = await client.query(`SELECT * FROM ${nba_h2h}`);
+    const { data: updated_result, error: updated_error } = await supabase
+      .from(update_time)
+      .select("*");
 
-    const updated = await client.query(`SELECT * FROM ${update_time}`);
+    // Handle errors
+    if (nfl_standings_error || nfl_h2h_error || nba_standings_error || nba_h2h_error || updated_error) {
+      console.error("Supabase Query Errors:", {
+        nfl_standings_error,
+        nfl_h2h_error,
+        nba_standings_error,
+        nba_h2h_error,
+        updated_error
+      });
+      return res.status(500).json({ error: "Error fetching data from Supabase" });
+    }
 
-    // Close the database connection
-    client.release();
+    // Data transformations
+    const nfl_std_final = nfl_standings_result.map(row => ({
+      ...row,
+      pick_int: Number(row.pick) // Convert 'pick' to integer
+    }));
 
-    const updated_final = updated.rows;
+    const nba_std_final = nba_standings_result.map(row => ({
+      ...row,
+      pick_int: Number(row.pick)
+    }));
 
-    const nfl_h2h_final = nfl_h2h_result.rows;
+    res.status(200).json({
+      nfl_standings: nfl_std_final,
+      nfl_h2h: nfl_h2h_result,
+      nba_standings: nba_std_final,
+      nba_h2h: nba_h2h_result,
+      updated: updated_result
+    });
 
-    const nba_h2h_final = nba_h2h_result.rows;
-    
-    const nfl_std_final = nfl_standings_result.rows.map(row => ({...row, pick_int: Number(row.pick)}))
-
-    const nba_std_final = nba_standings_result.rows.map(row => ({...row, pick_int: Number(row.pick)}))
-
-    res.status(200).json({ nfl_standings: nfl_std_final, nfl_h2h: nfl_h2h_final, nba_standings: nba_std_final, nba_h2h: nba_h2h_final, updated: updated_final });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Handler Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 }
