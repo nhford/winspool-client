@@ -4,8 +4,8 @@ async function fetchTime(){
     const connection = 'api/fetch';
     const response = await fetch(connection);
     const data = await response.json();
-    console.log(data['updated'][0].time)
-    return data['updated'][0].time;
+    console.log(data['updated'][0].value)
+    return data['updated'][0].value;
 }
 
 function useFetch(key, fetchFunction, state, setState){
