@@ -2,7 +2,7 @@
 
 ## Check it Out!
 
-[winspool-client.vercel.app](winspool-client.vercel.app)
+[winspool-client.vercel.app/](https://winspool-client.vercel.app/)
 
 ## Overview
 
@@ -27,12 +27,12 @@ Supabase used as the free, reliable database solution for data persistence
 
 - Jupyter Notebooks (Python)
 - Web scraping from Basketball Reference and Pro Football Reference
-- SQL queries using CockroachDB to store, retrieve, and manage data
+- SQL queries using Supabase to store, retrieve, and manage data
 - Cron tasks for daily automated updates
 
 #### Database:
 
-- CockroachDB (Free-tier hosting for easy, distributed SQL storage)
+- Supabase (Free-tier hosting for easy, distributed SQL storage)
 
 ## Architecture
 
