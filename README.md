@@ -28,7 +28,7 @@ Supabase used as the free, reliable database solution for data persistence
 - Jupyter Notebooks (Python)
 - Web scraping from Basketball Reference and Pro Football Reference
 - SQL queries using Supabase to store, retrieve, and manage data
-- Cron tasks for daily automated updates
+- Github Actions for daily automated updates
 
 #### Database:
 
@@ -42,7 +42,7 @@ The application consists of two main parts:
 
 Jupyter notebooks that scrape the necessary data (team standings, statistics, etc.) from Basketball Reference and Pro Football Reference.
 SQL queries are used to insert, update, and manage the data in the Supabase.
-Cron tasks are scheduled to run daily, ensuring the data is pulled and updated automatically.
+Github actions workflows are scheduled to in the evening, ensuring the data is pulled and updated automatically.
 
 ### Frontend:
 
@@ -63,9 +63,9 @@ The data is stored in a SQL client, Supabase. SQL queries are used to fetch the 
 
 The React frontend makes fetch requests to the backend to retrieve the latest data. This data is displayed in an easy-to-understand format, helping users quickly view key insights and statistics.
 
-### Cron Jobs:
+### Github Actions:
 
-Set up using cron tasks, these jobs make daily API requests and ensure that the database is continuously updated with the latest information. The cron jobs are scheduled to run at specific times to minimize the impact on performance.
+Set up using a github action workflow, the backend Jupyter notebook is run at scheduled intervals each day. These notebooks perform their API requests, transform the data, and push to the database.
 
 ## Deployment
 
