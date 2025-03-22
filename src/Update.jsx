@@ -4,8 +4,17 @@ async function fetchTime(){
     const connection = 'api/fetch';
     const response = await fetch(connection);
     const data = await response.json();
-    console.log(data['updated'][0].value)
-    return data['updated'][0].value;
+    const utcString = data['updated'][0].value;
+    const utcDate = new Date(utcString);
+    // Convert to local time and format
+    const localTimeString = utcDate.toLocaleString("en-US", {
+        month: "numeric",  // "Mar"
+        day: "2-digit",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,  // Enables AM/PM format
+    });
+    return localTimeString;
 }
 
 function useFetch(key, fetchFunction, state, setState){
