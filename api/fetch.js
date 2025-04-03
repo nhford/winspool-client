@@ -12,6 +12,8 @@ const nfl_standings = "nfl_standings";
 const nfl_h2h = "nfl_ownersh2h";
 const nba_standings = "nba_standings";
 const nba_h2h = "nba_ownersh2h";
+const mlb_standings = "mlb_standings";
+const mlb_h2h = "mlb_ownersh2h";
 const update_time = "update_time";
 
 export default async function handler(_, res) {
@@ -33,6 +35,14 @@ export default async function handler(_, res) {
       .from(nba_h2h)
       .select("*");
 
+    const { data: mlb_standings_result, error: mlb_standings_error } = await supabase
+      .from(mlb_standings)
+      .select("*");
+
+    const { data: mlb_h2h_result, error: mlb_h2h_error } = await supabase
+      .from(mlb_h2h)
+      .select("*");
+
     const { data: updated_result, error: updated_error } = await supabase
       .from(update_time)
       .select("*");
@@ -44,6 +54,8 @@ export default async function handler(_, res) {
         nfl_h2h_error,
         nba_standings_error,
         nba_h2h_error,
+        mlb_standings_error,
+        mlb_h2h_error,
         updated_error
       });
       return res.status(500).json({ error: "Error fetching data from Supabase" });
@@ -60,11 +72,18 @@ export default async function handler(_, res) {
       pick_int: Number(row.pick)
     }));
 
+    const mlb_std_final = mlb_standings_result.map(row => ({
+      ...row,
+      pick_int: Number(row.pick)
+    }));
+
     res.status(200).json({
       nfl_standings: nfl_std_final,
       nfl_h2h: nfl_h2h_result,
       nba_standings: nba_std_final,
       nba_h2h: nba_h2h_result,
+      mlb_standings: mlb_std_final,
+      mlb_h2h: mlb_h2h_result,
       updated: updated_result
     });
 

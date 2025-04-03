@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { handleSort } from './utils';
+import { handleSort, imgPath } from './utils';
 import PropTypes from 'prop-types';
 
 function HeadtoHead({sport}){
@@ -28,15 +28,18 @@ function HeadtoHead({sport}){
                         setTeamData(teams);
                         const ret = data
                             .filter(item => item.role === 'owner')
-                            .map(item => {const {...rest} = item; delete rest.abbrev; delete rest.role; return rest;})
+                            .map(item => {
+                                const {owner,...rest} = item; delete rest.abbrev; delete rest.role; 
+                                return {owner,...rest};})
                         return ret;
         })
           .then(data => {
                         const headers = Object.keys(data[0]);
                         setHeaders(headers);
-                        setLabels(headers.map((x,i) => {
-                            if(i === 0) return x.replace(/\b\w/g, char => char.toUpperCase());
-                            return 'vs ' + x.split('_')[1];
+                        setLabels(headers);
+                        setLabels(headers.map(x => {
+                            if(x != "owner") return 'vs ' + x.split('_')[1].replace(/\b\w/g, char => char.toUpperCase());
+                            return x.replace(/\b\w/g, char => char.toUpperCase());
                         }));
                         setData(data);})
           .then(() => setLoading(false))
@@ -100,7 +103,7 @@ function HeadtoHead({sport}){
                                 </tr>
                                 {expandedRow === row.owner && (
                                     <tr>
-                                        <td colSpan="6" style={{ padding: "0", backgroundColor: "black" }}>
+                                        <td colSpan="7" style={{ padding: "0", backgroundColor: "black" }}>
                                             <table style={{ width: "100%", borderCollapse: "collapse", borderColor:'black' }}>
                                                 <thead>
                                                     <tr>
@@ -144,10 +147,6 @@ function HeadtoHead({sport}){
 
 HeadtoHead.propTypes = {
     sport : PropTypes.string.isRequired,
-  }
-
-function imgPath(sport,abbrev,year=2024){
-    return `/logos/${sport}/${abbrev.toLowerCase()}-${year}.png`;
 }
 
 export default HeadtoHead;

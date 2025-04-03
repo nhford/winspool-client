@@ -5,7 +5,7 @@ import HeadtoHead from './HeadToHead.jsx'
 import ColorToggleButton from './Toggle.jsx'
 
 export default function Body(){
-    const [sport, setSport] = useState('nba');
+    const [sport, setSport] = useState('mlb');
     return (
       <>
         <ColorToggleButton sport={sport} setSport={setSport}/>

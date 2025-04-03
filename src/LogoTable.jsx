@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { handleSort } from './utils';
+import { handleSort, imgPath } from './utils';
 import PropTypes from 'prop-types';
 
 function LogoTable({sport}){
@@ -66,14 +66,14 @@ function LogoTable({sport}){
                     </thead>
                     <tbody>
                         {data.map(item => (
-                            <tr key={item.owner}>
+                            <tr key={item.owner} style={{height: 60}}>
                                 <td>{item.owner}</td>
                                 {/* <td>{`${item.wins}-${item.games - item.wins}`}</td> */}
                                 <td>{item.wins}</td>
                                 <td>{item.games}</td>
-                                <td>{item.teams.split(' ').map((abbrev,idx) =>{
-                                    const w = 50*winsDict[abbrev]/maxWins;
-                                    return <img key={idx} src={imgPath(sport,abbrev)} alt={abbrev + " Logo"} width={w} style={{ marginLeft: (50-w)/2, marginRight: (50-w)/2 }}></img>
+                                <td style={{}}>{item.teams.split(' ').map((abbrev,idx) =>{
+                                    const w = Math.max(3,50*winsDict[abbrev]/maxWins);
+                                    return <img key={idx} src={imgPath(sport,abbrev)} alt={abbrev + " Logo"} width={w} style={{ marginLeft: (50-w)/2, marginRight: (50-w)/2}}></img>
                                 })}
                                 </td>
                             </tr>
@@ -87,10 +87,6 @@ function LogoTable({sport}){
 
 LogoTable.propTypes = {
     sport : PropTypes.string.isRequired,
-  }
-
-function imgPath(sport,abbrev,year=2024){
-    return `/logos/${sport}/${abbrev.toLowerCase()}-${year}.png`;
 }
 
 export default LogoTable;

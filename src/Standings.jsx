@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
-import { handleSort } from './utils';
+import { handleSort, imgPath } from './utils';
 import PropTypes from 'prop-types';
 
 function Standings({sport}) {
@@ -85,10 +85,6 @@ function Standings({sport}) {
 
 Standings.propTypes = {
   sport : PropTypes.string.isRequired,
-}
-
-function imgPath(sport,abbrev,year=2024){
-    return `/logos/${sport}/${abbrev.toLowerCase()}-${year}.png`;
 }
 
 export default Standings
