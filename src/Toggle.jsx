@@ -19,6 +19,7 @@ export default function ColorToggleButton({sport, setSport}) {
     >
       <ToggleButton value="nfl">NFL</ToggleButton>
       <ToggleButton value="nba">NBA</ToggleButton>
+      <ToggleButton value="mlb">MLB</ToggleButton>
     </ToggleButtonGroup>
   );
 }
