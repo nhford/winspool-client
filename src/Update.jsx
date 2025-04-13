@@ -1,10 +1,18 @@
 import { useState, useEffect } from 'react'
+import PropTypes from "prop-types"; // Import PropTypes
 
-async function fetchTime(){
+async function fetchTime(sport){
     const connection = 'api/fetch';
     const response = await fetch(connection);
     const data = await response.json();
-    const utcString = data['updated'][0].value;
+
+    const updatesBySport = {};
+    for (const entry of data.updated) {
+        updatesBySport[entry.sport] = entry.update_time;
+    }
+    
+
+    const utcString = updatesBySport[sport];
     const utcDate = new Date(utcString);
     // Convert to local time and format
     const localTimeString = utcDate.toLocaleString("en-US", {
@@ -30,7 +38,7 @@ function useFetch(key, fetchFunction, state, setState){
                 setState(cachedData.value);
             } else {
                 // Fetch new data and update the cache
-                const fetchedValue = await fetchFunction();
+                const fetchedValue = await fetchFunction(key);
                 setState(fetchedValue);
                 localStorage.setItem(key, JSON.stringify({ day: day, hour: hour, value: fetchedValue }));
             }
@@ -42,13 +50,17 @@ function useFetch(key, fetchFunction, state, setState){
       return state;
 }
 
-export default function Update(){
+export default function Update({sport}){
     const [updated,setUpdated] = useState(null);
-    useFetch("updated",fetchTime,updated,setUpdated);
+    useFetch(sport,fetchTime,updated,setUpdated);
 
     if(!updated) return <p>Loading...</p>
 
     return (
         <p>{`Last updated: ${updated}`}</p>
         );
+}
+
+Update.propTypes = {
+    sport: PropTypes.string
 }
