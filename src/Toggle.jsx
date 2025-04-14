@@ -10,17 +10,18 @@ export default function ColorToggleButton({sport, setSport}) {
   };
 
   return (
-    <ToggleButtonGroup
-    //   color="primary"
-      value={sport}
-      exclusive
-      onChange={handleChange}
-      aria-label="Platform"
-    >
-      <ToggleButton value="nfl">NFL</ToggleButton>
-      <ToggleButton value="nba">NBA</ToggleButton>
-      <ToggleButton value="mlb">MLB</ToggleButton>
-    </ToggleButtonGroup>
+    <div className='buttons'>
+      <ToggleButtonGroup
+        value={sport}
+        exclusive
+        onChange={handleChange}
+        aria-label="Platform"
+      >
+        <ToggleButton value="nfl">NFL</ToggleButton>
+        <ToggleButton value="nba">NBA</ToggleButton>
+        <ToggleButton value="mlb">MLB</ToggleButton>
+      </ToggleButtonGroup>
+    </div>
   );
 }
 
