@@ -4,12 +4,12 @@ import './index.css'
 import {Signature} from './Footer.jsx'
 import Body from './Body.jsx'
 import HowTo from './HowTo.jsx'
+import Title from './Title.jsx'
 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <h1>Wins Pool Tracker</h1>
-    <h3>Who wins from each and every win in the NFL and NBA</h3>
+    <Title title={"Wins Pool"} subTitle={"Who wins from each and every win in the NFL, NBA, and MLB"}/>
     <Body />
     <HowTo />
     <Signature />
