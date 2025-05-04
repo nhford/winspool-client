@@ -72,7 +72,9 @@ function LogoTable({sport}){
                                 <td>{item.wins}</td>
                                 <td>{item.games}</td>
                                 <td style={{}}>{item.teams.split(' ').map((abbrev,idx) =>{
-                                    const w = Math.max(3,50*winsDict[abbrev]/maxWins);
+                                    const exp = sport == 'mlb' ? 2 : 1;
+                                    const scaled = (winsDict[abbrev]/maxWins)**exp;
+                                    const w = Math.max(3,50*scaled);
                                     return <img key={idx} src={imgPath(sport,abbrev)} alt={abbrev + " Logo"} width={w} style={{ marginLeft: (50-w)/2, marginRight: (50-w)/2}}></img>
                                 })}
                                 </td>
