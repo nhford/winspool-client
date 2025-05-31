@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { handleSort, imgPath } from './utils';
+import { handleSort, imgPath } from '../utils';
 import PropTypes from 'prop-types';
 
 function LogoTable({sport}){
@@ -60,7 +60,6 @@ function LogoTable({sport}){
                         <tr>
                             <th onClick={() => handleSort("owner",sortingUtil)}>Owner</th>
                             <th onClick={() => handleSort("wins",sortingUtil,"asc")}>Wins</th>
-                            <th onClick={() => handleSort("games",sortingUtil,"asc")}>Games</th>
                             <th style={{cursor: 'default'}}>Teams</th>
                         </tr>
                     </thead>
@@ -69,8 +68,12 @@ function LogoTable({sport}){
                             <tr key={item.owner} style={{height: 60}}>
                                 <td>{item.owner}</td>
                                 {/* <td>{`${item.wins}-${item.games - item.wins}`}</td> */}
-                                <td>{item.wins}</td>
-                                <td>{item.games}</td>
+                                <td>
+                                    <div className='flex flex-col'>
+                                        <p className='text-sm'>{item.wins}</p>
+                                        <p style={{'fontSize': '0.6em', 'marginTop': '-0.5em'}}>{`Games: ${item.games}`}</p>
+                                    </div>
+                                </td>
                                 <td style={{}}>{item.teams.split(' ').map((abbrev,idx) =>{
                                     const exp = sport == 'mlb' ? 2 : 1;
                                     const scaled = (winsDict[abbrev]/maxWins)**exp;

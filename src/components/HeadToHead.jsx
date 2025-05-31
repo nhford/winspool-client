@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { handleSort, imgPath } from './utils';
+import { handleSort, imgPath } from '../utils';
 import PropTypes from 'prop-types';
 
 function HeadtoHead({sport}){
