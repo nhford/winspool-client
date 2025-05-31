@@ -1,10 +1,10 @@
 import {StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import {Signature} from './Footer.jsx'
+import {Signature} from './components/Footer.jsx'
 import Body from './Body.jsx'
-import HowTo from './HowTo.jsx'
-import Title from './Title.jsx'
+import HowTo from './components/HowTo.jsx'
+import Title from './components/Title.jsx'
 
 
 createRoot(document.getElementById('root')).render(

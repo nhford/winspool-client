@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import './Standings.css'
-import { handleSort, imgPath } from './utils';
+import '../Standings.css'
+import { handleSort, imgPath } from '../utils';
 import PropTypes from 'prop-types';
 
 function Standings({sport}) {

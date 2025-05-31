@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import Standings from './Standings.jsx'
-import LogoTable from './LogoTable';
-import HeadtoHead from './HeadToHead.jsx'
-import ColorToggleButton from './Toggle.jsx'
-import Update from './Update.jsx';
+import Standings from './components/Standings.jsx'
+import LogoTable from './components/LogoTable.jsx';
+import HeadtoHead from './components/HeadToHead.jsx'
+import ColorToggleButton from './components/Toggle.jsx'
+import Update from './components/Update.jsx';
 
 export default function Body(){
     const [sport, setSport] = useState('mlb');
