@@ -82,7 +82,7 @@ function HeadtoHead({sport}){
                 <table className="HeadtoHeadTable">
                     <thead>
                         <tr>
-                            {labels.sort().map((label,i) => <th key={i} onClick={() => i == 0 ? handleSort(headers[i],sortingUtil) : recordSort(headers[i],sortingUtil)}>{label}</th>)}
+                            {labels.map((label,i) => <th key={i} onClick={() => i == 0 ? handleSort(headers[i],sortingUtil) : recordSort(headers[i],sortingUtil)}>{label}</th>)}
                             <th style={{cursor:'default'}}>+/-</th>
                         </tr>
                     </thead>
