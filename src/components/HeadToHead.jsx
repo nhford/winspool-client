@@ -87,11 +87,11 @@ function HeadtoHead({sport}){
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map(row => (
+                        {data.map((row,rowIndex) => (
                             <React.Fragment key={row.owner}>
                                 <tr key={row.owner} style={{ cursor: "pointer" }} onClick={() => toggleExpand(row.owner)}>
                                     {
-                                        headers.map((col,i) => (<td key={i}>{row[col]}</td>))
+                                        headers.map((col,i) => (<td key={i} style={{'background-color': i-1 == rowIndex ? 'lightgray' : 'white'}}>{row[col]}</td>))
                                     }
                                     <td>
                                     <button className='expand' onClick={(e) => {
@@ -128,7 +128,7 @@ function HeadtoHead({sport}){
                                                                     className='standingsLogo'
                                                                 />
                                                             </td>
-                                                            {headers.map((col, i) => i > 0 && (<td key={i}>{team[col]}</td>))}
+                                                            {headers.map((col, j) => j > 0 && (<td key={j}>{team[col]}</td>))}
                                                             <td></td>
                                                         </tr>
                                                     ))}
