@@ -31,10 +31,11 @@ function HeadtoHead({sport}){
                             .map(item => {
                                 const {owner,...rest} = item; delete rest.abbrev; delete rest.role; 
                                 return {owner,...rest};})
+                            .sort((a,b)=> a.owner.localeCompare(b.owner));
                         return ret;
         })
           .then(data => {
-                        const headers = Object.keys(data[0]);
+                        const headers = Object.keys(data[0]).sort();
                         setHeaders(headers);
                         setLabels(headers);
                         setLabels(headers.map(x => {
@@ -81,7 +82,7 @@ function HeadtoHead({sport}){
                 <table className="HeadtoHeadTable">
                     <thead>
                         <tr>
-                            {labels.map((label,i) => <th key={i} onClick={() => i == 0 ? handleSort(headers[i],sortingUtil) : recordSort(headers[i],sortingUtil)}>{label}</th>)}
+                            {labels.sort().map((label,i) => <th key={i} onClick={() => i == 0 ? handleSort(headers[i],sortingUtil) : recordSort(headers[i],sortingUtil)}>{label}</th>)}
                             <th style={{cursor:'default'}}>+/-</th>
                         </tr>
                     </thead>
