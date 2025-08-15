@@ -30,8 +30,8 @@ function VenmoIcon({ size = 30 }) {
   
     return (
       <>
-        <p className="signature" style={{marginTop: '30px', marginBottom: '0px'}}>Created by Noah Ford, UMass CICS &apos;26</p>
-        <a href="https://github.com/NFordUMass" target="_blank" rel="noopener noreferrer">
+        <p className="signature" style={{marginTop: '30px', marginBottom: '0px'}}>Created by Noah Ford, UMass CICS &apos;25</p>
+        <a href="https://github.com/nhford/winspool-client" target="_blank" rel="noopener noreferrer">
           <GitHubIcon className="icon" style={{ color: "black", width: iconSize, height: iconSize }} />
         </a>
         <a href="https://www.linkedin.com/in/nhford/" target="_blank" rel="noopener noreferrer">
