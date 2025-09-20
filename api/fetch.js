@@ -8,8 +8,8 @@ const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
 const supabase = createClient(supabaseURL, supabaseAnonKey);
 
-const nfl_standings = "nfl_standings";
-const nfl_h2h = "nfl_ownersh2h";
+const nfl_standings = `nfl_standings`;
+const nfl_h2h = `nfl_ownersh2h`;
 const nba_standings = "nba_standings";
 const nba_h2h = "nba_ownersh2h";
 const mlb_standings = "mlb_standings";

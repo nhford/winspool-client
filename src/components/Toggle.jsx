@@ -3,29 +3,34 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import PropTypes from 'prop-types';
 
 
-export default function ColorToggleButton({sport, setSport}) {
+export default function ColorToggleButton({item, options, setItem}) {
 
   const handleChange = (event, newSport) => {
-    setSport(newSport);
+    if(newSport != null){
+      setItem(newSport);
+    }
   };
 
   return (
     <div className='buttons'>
       <ToggleButtonGroup
-        value={sport}
+        value={item || null}
         exclusive
         onChange={handleChange}
         aria-label="Platform"
       >
-        <ToggleButton value="nfl">NFL</ToggleButton>
-        <ToggleButton value="nba">NBA</ToggleButton>
-        <ToggleButton value="mlb">MLB</ToggleButton>
+        {
+        options.map(option => (
+          <ToggleButton key={option} value={option}>{option.toUpperCase()}</ToggleButton>
+        ))
+      }
       </ToggleButtonGroup>
     </div>
   );
 }
 
 ColorToggleButton.propTypes = {
-    sport: PropTypes.string.isRequired,
-    setSport: PropTypes.func.isRequired,
+    item: PropTypes.string.isRequired,
+    options: PropTypes.array.isRequired,
+    setItem: PropTypes.func.isRequired,
 };

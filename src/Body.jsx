@@ -1,21 +1,37 @@
-import { useState } from 'react';
-import Standings from './components/Standings.jsx'
-import LogoTable from './components/LogoTable.jsx';
-import HeadtoHead from './components/HeadToHead.jsx'
-import ColorToggleButton from './components/Toggle.jsx'
-import Update from './components/Update.jsx';
+import { useState, useEffect } from "react";
+import ColorToggleButton from "./components/Toggle.jsx";
+import Content from "./Content.jsx";
+import Update from "./components/Update.jsx";
 
-export default function Body(){
-    const [sport, setSport] = useState('mlb');
-    return (
-      <>
-        <ColorToggleButton sport={sport} setSport={setSport}/>
-        <Update sport={sport}/>
-        <h2>Current Standings</h2>
-        <LogoTable sport={sport}/>
-        <h2>Head to Head</h2>
-        <HeadtoHead sport={sport}/>
-        <h2>Full Draft</h2>
-        <Standings sport={sport}/>
-      </>
-  )}
+export default function Body() {
+  const yearOptions = {
+    mlb: ["2025"],
+    nba: ["2024"],
+    nfl: ["2025", "2024"],
+  };
+
+  const [sport, setSport] = useState("mlb");
+  const [year, setYear] = useState(yearOptions["mlb"][0]);
+
+  // reset year whenever sport changes
+  useEffect(() => {
+    setYear(yearOptions[sport][0]);
+  }, [sport]);
+
+  return (
+    <>
+      <ColorToggleButton
+        item={sport}
+        options={["mlb", "nba", "nfl"]}
+        setItem={setSport}
+      />
+      <Update sport={sport} year={year} />
+      <ColorToggleButton
+        item={year}
+        options={yearOptions[sport]}
+        setItem={setYear}
+      />
+      <Content sport={sport} year={year} />
+    </>
+  );
+}
