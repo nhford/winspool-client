@@ -6,12 +6,12 @@ import Update from "./components/Update.jsx";
 export default function Body() {
   const yearOptions = {
     mlb: ["2025"],
-    nba: ["2024"],
+    nba: ["2025", "2024"],
     nfl: ["2025", "2024"],
   };
 
-  const [sport, setSport] = useState("mlb");
-  const [year, setYear] = useState(yearOptions["mlb"][0]);
+  const [sport, setSport] = useState("nfl");
+  const [year, setYear] = useState(yearOptions["nfl"][0]);
 
   // reset year whenever sport changes
   useEffect(() => {
