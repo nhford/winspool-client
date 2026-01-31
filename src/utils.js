@@ -18,3 +18,21 @@ export function imgPath(sport,abbrev){
   const year = leagueYear[sport];
   return `/logos/${sport}/${abbrev.toLowerCase()}-${year}.png`;
 }
+
+export function defaultSport(){
+  const current_date = new Date();
+  const month = current_date.getMonth();
+  const day = current_date.getDate();
+  if(month <= 1 && day <= 10){
+    return 'nfl';
+  }
+  else if(month <= 5){
+    return 'nba';
+  }
+  else if(month <= 9 && day <= 17){
+    return 'mlb';
+  }
+  else {
+    return 'nfl';
+  }
+}
