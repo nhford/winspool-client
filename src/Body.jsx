@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import ColorToggleButton from "./components/Toggle.jsx";
 import Content from "./Content.jsx";
 import Update from "./components/Update.jsx";
+import { defaultSport } from "./utils";
 
 export default function Body() {
   const yearOptions = {
@@ -10,8 +11,9 @@ export default function Body() {
     nfl: ["2025", "2024"],
   };
 
-  const [sport, setSport] = useState("nfl");
-  const [year, setYear] = useState(yearOptions["nfl"][0]);
+  const default_sport = defaultSport();
+  const [sport, setSport] = useState(default_sport);
+  const [year, setYear] = useState(yearOptions[default_sport][0]);
 
   // reset year whenever sport changes
   useEffect(() => {
