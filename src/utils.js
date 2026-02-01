@@ -21,7 +21,10 @@ export function imgPath(sport,abbrev){
 
 export function defaultSport(){
   const current_date = new Date();
-  const month = current_date.getMonth();
+  /* getMonth() returns 0-indexed month (0-11) */
+  const month = current_date.getMonth() + 1;
+
+  /* getDate() returns day (1-31) */
   const day = current_date.getDate();
   if(month <= 1 && day <= 10){
     return 'nfl';
