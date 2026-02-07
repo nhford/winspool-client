@@ -16,7 +16,7 @@ export const leagueYear = {
 
 export function imgPath(sport,abbrev){
   const year = leagueYear[sport];
-  return `/logos/${sport}/${abbrev.toLowerCase()}-${year}.png`;
+  return `/team_logos/${sport}/${abbrev.toLowerCase()}-${year}.png`;
 }
 
 export function defaultSport(){

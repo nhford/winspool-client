@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { handleSort, imgPath } from "../utils";
+import { handleSort, imgPath } from "../../utils";
 import PropTypes from "prop-types";
 
 function HeadtoHead({ sport, year }) {
@@ -38,21 +38,32 @@ function HeadtoHead({ sport, year }) {
             return { owner, ...rest };
           })
           .sort((a, b) => a.owner.localeCompare(b.owner));
-        return ret;
+        const owners_set = new Set();
+        data
+          .filter((item) => item.year == year)
+          .forEach((item) => {
+            if (!owners_set.has(item.owner)) {
+              owners_set.add(item.owner);
+            }
+          });
+        const owners = [...owners_set].sort((a, b) => a.localeCompare(b));
+        return [ret, owners];
       })
-      .then((data) => {
-        const headers = Object.keys(data[0]).sort();
+      .then(([data, owners]) => {
+        const labels = ["Owner", ...owners];
+        const headers = [
+          "owner",
+          ...owners.map((owner) => {
+            const cap = owner.replace(/^./, (c) => c.toLowerCase());
+            return `vs_${cap}`;
+          }),
+        ];
         setHeaders(headers);
-        setLabels(headers);
         setLabels(
-          headers.map((x) => {
-            if (x != "owner")
-              return (
-                "vs " +
-                x.split("_")[1].replace(/\b\w/g, (char) => char.toUpperCase())
-              );
-            return x.replace(/\b\w/g, (char) => char.toUpperCase());
-          })
+          labels.map((x) => {
+            if (x != "Owner") return "vs " + x;
+            return x;
+          }),
         );
         setData(data);
       })
@@ -73,14 +84,14 @@ function HeadtoHead({ sport, year }) {
     setState(
       [...stateData].sort((a, b) => {
         const records = [a, b].map((row) =>
-          row[key].split("-").map((x) => parseInt(x, 10))
+          row[key].split("-").map((x) => parseInt(x, 10)),
         );
         const rest = records.map((record) =>
-          record.slice(1).reduce((acc, e) => acc + e, 0)
+          record.slice(1).reduce((acc, e) => acc + e, 0),
         );
         const games = records.map((r, i) => r[0] + rest[i]);
         const [pct1, pct2] = records.map((record, i) =>
-          record[0] + rest[i] > 0 ? record[0] / (record[0] + rest[i]) : 0
+          record[0] + rest[i] > 0 ? record[0] / (record[0] + rest[i]) : 0,
         );
         // three cases: not tied, tied >= .500, or tied < .500
         return pct1 == pct2
@@ -89,12 +100,12 @@ function HeadtoHead({ sport, year }) {
               ? i
               : -i
             : games[1] < games[0]
-            ? -i
-            : i
+              ? -i
+              : i
           : pct1 > pct2
-          ? i
-          : -i;
-      })
+            ? i
+            : -i;
+      }),
     );
   }
 
@@ -187,7 +198,7 @@ function HeadtoHead({ sport, year }) {
                                   >
                                     {label}
                                   </th>
-                                )
+                                ),
                             )}
                             <th style={{ cursor: "default" }}>{"+/-"}</th>
                           </tr>
@@ -207,7 +218,7 @@ function HeadtoHead({ sport, year }) {
                                 </td>
                                 {headers.map(
                                   (col, j) =>
-                                    j > 0 && <td key={j}>{team[col]}</td>
+                                    j > 0 && <td key={j}>{team[col]}</td>,
                                 )}
                                 <td></td>
                               </tr>
