@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "../Standings.css";
-import { handleSort, imgPath } from "../utils";
+import { handleSort, imgPath } from "../../utils";
 import PropTypes from "prop-types";
 
-function Standings({ sport, year }) {
+function FullDraft({ sport, year }) {
   const [data, setData] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
   const [sorted, setSorted] = useState({ key: "pct", dir: "asc" });
@@ -104,9 +103,9 @@ function Standings({ sport, year }) {
   );
 }
 
-Standings.propTypes = {
+FullDraft.propTypes = {
   sport: PropTypes.string.isRequired,
   year: PropTypes.number.isRequired,
 };
 
-export default Standings;
+export default FullDraft;

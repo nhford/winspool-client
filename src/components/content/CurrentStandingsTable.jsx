@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { handleSort, imgPath } from "../utils";
+import { handleSort, imgPath } from "../../utils";
 import PropTypes from "prop-types";
 
-function LogoTable({ sport, year }) {
+function CurrentStandings({ sport, year }) {
   const [data, setData] = useState([]);
   const [sorted, setSorted] = useState({ key: "wins", dir: "asc" });
   const [winsDict, setWinsDict] = useState([]);
@@ -48,7 +48,7 @@ function LogoTable({ sport, year }) {
           wins,
           games,
           teams: teams.join(" "),
-        }))
+        })),
       )
       .then((data) => data.sort((a, b) => b.wins - a.wins))
       .then((data) => setData(data))
@@ -114,9 +114,9 @@ function LogoTable({ sport, year }) {
   );
 }
 
-LogoTable.propTypes = {
+CurrentStandings.propTypes = {
   sport: PropTypes.string.isRequired,
   year: PropTypes.number.isRequired,
 };
 
-export default LogoTable;
+export default CurrentStandings;
