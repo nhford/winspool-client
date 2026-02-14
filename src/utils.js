@@ -1,11 +1,17 @@
-export function handleSort(key,[sorted,setSorted,data,setData],natural="desc"){
+export function handleSort(key,sorted,setSorted,data,setData,natural="desc",setExpandedRows,secondary="team"){
     let dir = natural;
     if(sorted.key == key && sorted.dir == natural){
       dir = natural == "desc" ? "asc" : "desc";
     } 
     setSorted({key,dir});
     let i = dir == "asc" ? 1 : -1;
-    setData([...data].sort((a,b) => a[key] < b[key] ? i : -i));
+    setData([...data].sort((a,b) => a[secondary] < b[secondary] ? i : -i).sort((a,b) => a[key] < b[key] ? i : -i));
+
+    if(setExpandedRows){
+      setExpandedRows(prev =>
+        Object.fromEntries(Object.keys(prev).map(k => [k, false]))
+      );
+    }
 }
 
 export const leagueYear = {
