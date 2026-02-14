@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 function FullDraft({ sport, year }) {
   const [data, setData] = useState([]);
-  const [expandedRow, setExpandedRow] = useState(null);
+  const [expandedRows, setExpandedRows] = useState({});
   const [sorted, setSorted] = useState({ key: "pct", dir: "asc" });
   const [loading, setLoading] = useState(true);
 
@@ -19,15 +19,28 @@ function FullDraft({ sport, year }) {
         data.sort((a, b) => (a["pick_int"] < b["pick_int"] ? -1 : 1));
         data = data.filter((row) => row.year == year);
         setData(data);
+        setExpandedRows(
+          Object.fromEntries(data.map((row) => [row.abbrev, false])),
+        );
       })
       .then(() => setLoading(false))
       .catch((error) => console.error("Error fetching data:", error));
   }, [sport, year]);
 
-  const sortingUtil = [sorted, setSorted, data, setData];
+  const sortingUtil = [
+    sorted,
+    setSorted,
+    data,
+    setData,
+    undefined,
+    setExpandedRows,
+  ];
 
-  const toggleExpand = (rowIndex) => {
-    setExpandedRow(expandedRow === rowIndex ? null : rowIndex); // Toggle expanded row
+  const toggleExpand = (rowAbbrev) => {
+    setExpandedRows((prev) => ({
+      ...prev,
+      [rowAbbrev]: !prev[rowAbbrev],
+    }));
   };
 
   return (
@@ -38,23 +51,28 @@ function FullDraft({ sport, year }) {
         <table>
           <thead>
             <tr>
-              <th colSpan={2} onClick={() => handleSort("team", sortingUtil)}>
+              <th
+                colSpan={2}
+                onClick={() => handleSort("team", ...sortingUtil)}
+              >
                 Team
               </th>
-              <th onClick={() => handleSort("pick_int", sortingUtil)}>Pick</th>
-              <th onClick={() => handleSort("owner", sortingUtil)}>Owner</th>
-              <th onClick={() => handleSort("pct", sortingUtil, "asc")}>
+              <th onClick={() => handleSort("pick_int", ...sortingUtil)}>
+                Pick
+              </th>
+              <th onClick={() => handleSort("owner", ...sortingUtil)}>Owner</th>
+              <th onClick={() => handleSort("pct", ...sortingUtil, "asc")}>
                 Record
               </th>
               <th style={{ cursor: "default" }}>+/-</th>
             </tr>
           </thead>
           <tbody>
-            {data.map((row, index) => (
+            {data.map((row) => (
               <React.Fragment key={row.abbrev}>
                 <tr
                   style={{ cursor: "pointer" }}
-                  onClick={() => toggleExpand(index)}
+                  onClick={() => toggleExpand(row.abbrev)}
                 >
                   <td>
                     <img
@@ -72,14 +90,14 @@ function FullDraft({ sport, year }) {
                       className="expand"
                       onClick={(e) => {
                         e.stopPropagation(); // Prevent triggering the row click
-                        toggleExpand(index);
+                        toggleExpand(row.abbrev);
                       }}
                     >
-                      {expandedRow === index ? "-" : "+"}
+                      {expandedRows[row.abbrev] ? "-" : "+"}
                     </button>
                   </td>
                 </tr>
-                {expandedRow === index && (
+                {expandedRows[row.abbrev] && (
                   <tr>
                     <td
                       colSpan="6"

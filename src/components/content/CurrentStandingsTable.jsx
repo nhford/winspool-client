@@ -66,8 +66,8 @@ function CurrentStandings({ sport, year }) {
         <table className="LogoTable">
           <thead>
             <tr>
-              <th onClick={() => handleSort("owner", sortingUtil)}>Owner</th>
-              <th onClick={() => handleSort("wins", sortingUtil, "asc")}>
+              <th onClick={() => handleSort("owner", ...sortingUtil)}>Owner</th>
+              <th onClick={() => handleSort("wins", ...sortingUtil, "asc")}>
                 Wins
               </th>
               <th style={{ cursor: "default" }}>Teams</th>
