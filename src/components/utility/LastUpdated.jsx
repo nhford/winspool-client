@@ -8,7 +8,6 @@ async function fetchTime(key) {
 
   const updatesBySport = {};
   for (const entry of data.updated) {
-    console.log(entry);
     updatesBySport[`${entry.sport}`] = entry.update_time;
   }
 
