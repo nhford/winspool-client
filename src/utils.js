@@ -25,13 +25,13 @@ export function defaultSport(){
 
   /* getDate() returns day (1-31) */
   const day = current_date.getDate();
-  if(month <= 1 && day <= 10){
+  if(month == 0){
     return 'nfl';
   }
-  else if(month <= 5){
+  else if(month <= 2 && day <= 25){
     return 'nba';
   }
-  else if(month <= 9 && day <= 17){
+  else if(month <= 9){
     return 'mlb';
   }
   else {
