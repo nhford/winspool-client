@@ -11,7 +11,7 @@ import HowTo from "./content/HowToSection.jsx";
 
 export default function SiteLayout() {
   const yearOptions = {
-    mlb: ["2025"],
+    mlb: ["2026", "2025"],
     nba: ["2025", "2024"],
     nfl: ["2025", "2024"],
   };
