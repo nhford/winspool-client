@@ -14,15 +14,8 @@ export function handleSort(key,sorted,setSorted,data,setData,natural="desc",setE
     }
 }
 
-export const leagueYear = {
-  'mlb' : 2025,
-  'nba' : 2024,
-  'nfl' : 2024
-}
-
 export function imgPath(sport,abbrev){
-  const year = leagueYear[sport];
-  return `/team_logos/${sport}/${abbrev.toLowerCase()}-${year}.png`;
+  return `/team_logos/${sport}/${abbrev.toLowerCase()}.png`;
 }
 
 export function defaultSport(){
