@@ -88,7 +88,7 @@ function CurrentStandings({ sport, year }) {
                 </td>
                 <td style={{}}>
                   {item.teams.split(" ").map((abbrev, idx) => {
-                    const exp = sport == "mlb" ? 3 : 1;
+                    const exp = sport == "mlb" ? (maxWins > 13 ? 3 : 1) : 1;
                     const scaled = (winsDict[abbrev] / maxWins) ** exp;
                     const w = Math.max(3, 50 * scaled);
                     return (
