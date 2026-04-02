@@ -50,7 +50,7 @@ function CurrentStandings({ sport, year }) {
           teams: teams.join(" "),
         })),
       )
-      .then((data) => data.sort((a, b) => b.wins - a.wins))
+      .then((data) => data.sort((a, b) => b.wins - a.wins || a.games - b.games))
       .then((data) => setData(data))
       .then(() => setLoading(false))
       .catch((error) => console.error("Error fetching data:", error));
