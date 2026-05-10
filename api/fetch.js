@@ -14,6 +14,8 @@ const nba_standings = "nba_standings";
 const nba_h2h = "nba_ownersh2h";
 const mlb_standings = "mlb_standings";
 const mlb_h2h = "mlb_ownersh2h";
+const wnba_standings = "wnba_standings";
+const wnba_h2h = "wnba_ownersh2h";
 const update_time = "update_time";
 
 export default async function handler(_, res) {
@@ -43,12 +45,20 @@ export default async function handler(_, res) {
       .from(mlb_h2h)
       .select("*");
 
+    const { data: wnba_standings_result, error: wnba_standings_error } = await supabase
+      .from(wnba_standings)
+      .select("*");
+
+    const { data: wnba_h2h_result, error: wnba_h2h_error } = await supabase
+      .from(wnba_h2h)
+      .select("*");
+
     const { data: updated_result, error: updated_error } = await supabase
       .from(update_time)
       .select("*");
 
     // Handle errors
-    if (nfl_standings_error || nfl_h2h_error || nba_standings_error || nba_h2h_error || updated_error) {
+    if (nfl_standings_error || nfl_h2h_error || nba_standings_error || nba_h2h_error || mlb_standings_error || mlb_h2h_error || wnba_standings_error || wnba_h2h_error || updated_error) {
       console.error("Supabase Query Errors:", {
         nfl_standings_error,
         nfl_h2h_error,
@@ -77,6 +87,11 @@ export default async function handler(_, res) {
       pick_int: Number(row.pick)
     }));
 
+    const wnba_std_final = wnba_standings_result.map(row => ({
+      ...row,
+      pick_int: Number(row.pick)
+    }));
+
     res.status(200).json({
       nfl_standings: nfl_std_final,
       nfl_h2h: nfl_h2h_result,
@@ -84,6 +99,8 @@ export default async function handler(_, res) {
       nba_h2h: nba_h2h_result,
       mlb_standings: mlb_std_final,
       mlb_h2h: mlb_h2h_result,
+      wnba_standings: wnba_std_final,
+      wnba_h2h: wnba_h2h_result,
       updated: updated_result
     });
 
