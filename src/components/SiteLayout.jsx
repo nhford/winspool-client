@@ -14,6 +14,7 @@ export default function SiteLayout() {
     mlb: ["2026", "2025"],
     nba: ["2025", "2024"],
     nfl: ["2025", "2024"],
+    wnba: ["2026"],
   };
 
   const default_sport = defaultSport();
@@ -27,7 +28,11 @@ export default function SiteLayout() {
 
   return (
     <>
-      <Toggle item={sport} options={["mlb", "nba", "nfl"]} setItem={setSport} />
+      <Toggle
+        item={sport}
+        options={["mlb", "nba", "nfl", "wnba"]}
+        setItem={setSport}
+      />
       <LastUpdated sport={sport} year={year} />
       <Toggle item={year} options={yearOptions[sport]} setItem={setYear} />
       {/* Content */}

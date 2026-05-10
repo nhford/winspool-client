@@ -31,6 +31,12 @@ export function defaultSport(){
   else if(month <= 2 && day <= 25){
     return 'nba';
   }
+  else if(month <= 4 && day <= 8){
+    return 'mlb';
+  }
+  else if(month <= 8){
+    return 'wnba';
+  }
   else if(month <= 9){
     return 'mlb';
   }
