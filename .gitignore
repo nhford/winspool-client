@@ -27,3 +27,4 @@ dist-ssr
 
 # TODOs.txt
 TODOs.txt
+.env*.local

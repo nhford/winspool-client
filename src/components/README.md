@@ -1,6 +1,6 @@
 ## Components Hierarchy
 
-main.jsx
+main.tsx
 
 - Title
 - SiteLayout
@@ -10,4 +10,5 @@ main.jsx
   - Current Standings
   - Head to Head
   - Full Draft
+  - How To
 - Signature
