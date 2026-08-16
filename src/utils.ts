@@ -21,8 +21,12 @@ export function handleSort<T extends SortableRow>(
   const i = dir === "asc" ? 1 : -1;
   setData(
     [...data]
-      .sort((a, b) => ((a[secondary] as string) < (b[secondary] as string) ? i : -i))
-      .sort((a, b) => ((a[key] as string | number) < (b[key] as string | number) ? i : -i)),
+      .sort((a, b) =>
+        (a[secondary] as string) < (b[secondary] as string) ? -i : i,
+      )
+      .sort((a, b) =>
+        (a[key] as string | number) < (b[key] as string | number) ? -i : i,
+      ),
   );
 
   if (setExpandedRows) {

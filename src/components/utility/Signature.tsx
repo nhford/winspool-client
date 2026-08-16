@@ -30,7 +30,7 @@ export function Signature() {
   return (
     <div className="mt-6 mb-4">
       <p className="m-0 px-4 text-sm sm:text-base">
-        Created by Noah Ford, UMass CICS &apos;25
+        Created by Noah Ford, CMU &apos;26
       </p>
       <a
         href="https://github.com/nhford/winspool-client"

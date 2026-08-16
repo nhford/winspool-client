@@ -2,6 +2,7 @@ import { useLayoutEffect, useState, type CSSProperties } from "react";
 import { usePoolData } from "../../PoolDataContext";
 import { handleSort, imgPath } from "../../utils";
 import type { H2HRow, SortedState, Sport, StandingRow } from "../../types";
+import SortChips, { type SortChipOption } from "../utility/SortChips";
 
 /** Fixed logo slot size in px (desktop). Logos are contained within this box. */
 const LOGO_FULL_SIZE = 68;
@@ -97,7 +98,7 @@ function buildStandings(
 export default function CurrentStandings({ sport, year }: CurrentStandingsProps) {
   const { payload, loading } = usePoolData();
   const [data, setData] = useState<StandingsOwnerRow[]>([]);
-  const [sorted, setSorted] = useState<SortedState>({ key: "wins", dir: "asc" });
+  const [sorted, setSorted] = useState<SortedState>({ key: "wins", dir: "desc" });
   const [logoScaleByAbbrev, setLogoScaleByAbbrev] = useState<Record<string, number>>(
     {},
   );
@@ -118,7 +119,7 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
     setLogoScaleByAbbrev(scales);
     setFormWindow(windowSize);
     setMaxTeams(teamCols);
-    setSorted({ key: "wins", dir: "asc" });
+    setSorted({ key: "wins", dir: "desc" });
   }, [payload, sport, year]);
 
   if (loading || !payload) {
@@ -129,8 +130,24 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
   const formLabelLong =
     formWindow != null ? `Last ${formWindow}` : "Form";
 
+  const standingsSortChips: SortChipOption[] = [
+    { key: "owner", label: "Owner", natural: "asc" },
+    { key: "wins", label: "Wins", natural: "desc" },
+    { key: "recent_wins", label: formLabelShort, natural: "desc" },
+  ];
+
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full">
+      <SortChips
+        options={standingsSortChips}
+        sorted={sorted}
+        setSorted={setSorted}
+        data={data}
+        setData={setData}
+        secondary="owner"
+        aria-label="Sort standings"
+      />
+      <div className="w-full overflow-x-auto">
       <table className="data-table standings-table w-full md:table-fixed">
         <colgroup className="max-md:hidden">
           <col className="w-[16%]" />
@@ -143,7 +160,7 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
             <th
               className="cursor-pointer px-1"
               onClick={() =>
-                handleSort("owner", sorted, setSorted, data, setData)
+                handleSort("owner", sorted, setSorted, data, setData, "asc")
               }
             >
               Owner
@@ -151,7 +168,7 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
             <th
               className="cursor-pointer px-1"
               onClick={() =>
-                handleSort("wins", sorted, setSorted, data, setData, "asc")
+                handleSort("wins", sorted, setSorted, data, setData, "desc")
               }
             >
               Wins
@@ -159,7 +176,14 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
             <th
               className="cursor-pointer px-1"
               onClick={() =>
-                handleSort("recent_wins", sorted, setSorted, data, setData)
+                handleSort(
+                  "recent_wins",
+                  sorted,
+                  setSorted,
+                  data,
+                  setData,
+                  "desc",
+                )
               }
               title={
                 formWindow != null
@@ -241,6 +265,7 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

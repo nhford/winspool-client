@@ -145,7 +145,14 @@ export default function HeadToHead({ sport, year }: HeadToHeadProps) {
                 className="cursor-pointer whitespace-nowrap px-1"
                 onClick={() =>
                   i == 0
-                    ? handleSort(headers[i], sorted, setSorted, data, setData)
+                    ? handleSort(
+                        headers[i],
+                        sorted,
+                        setSorted,
+                        data,
+                        setData,
+                        "asc",
+                      )
                     : recordSort(headers[i], sorted, setSorted, data, setData)
                 }
               >
@@ -217,6 +224,7 @@ export default function HeadToHead({ sport, year }: HeadToHeadProps) {
                                 setSortKey,
                                 teamData,
                                 setTeamData,
+                                "asc",
                               )
                             }
                           >

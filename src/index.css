@@ -17,10 +17,14 @@
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
+    background-color: #ffffff;
+    color: #213547;
   }
 
   #root {
     width: 100%;
+    min-height: 100vh;
+    background-color: #ffffff;
   }
 
   :root {
@@ -53,18 +57,31 @@
     }
   }
 
-  /* Phone Current Standings: stacked cards, same border language. */
+  /* Phone Current Standings / Full Draft: stacked cards, same border language. */
   @media (max-width: 767px) {
-    table.data-table.standings-table {
-      display: block;
+    table.data-table.standings-table,
+    table.data-table.draft-table {
       width: 100%;
       border: none;
       background-color: transparent;
       border-spacing: 0;
     }
 
-    table.data-table.standings-table thead {
+    table.data-table.standings-table thead,
+    table.data-table.draft-table thead {
       display: none;
+    }
+
+    table.data-table.standings-table th,
+    table.data-table.standings-table td,
+    table.data-table.draft-table th,
+    table.data-table.draft-table td {
+      padding: 0;
+    }
+
+    /* Standings: each row is a card. */
+    table.data-table.standings-table {
+      display: block;
     }
 
     table.data-table.standings-table tbody {
@@ -74,16 +91,45 @@
       width: 100%;
     }
 
-    table.data-table.standings-table th,
-    table.data-table.standings-table td {
-      padding: 0;
-    }
-
     table.data-table.standings-table tbody tr {
       display: grid;
       width: 100%;
       box-sizing: border-box;
       border: var(--table-border-width) solid var(--table-border-color);
+    }
+
+    /* Draft: each tbody is a card (main row + optional details). */
+    table.data-table.draft-table {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    table.data-table.draft-table tbody {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      border: var(--table-border-width) solid var(--table-border-color);
+      border-radius: 0.375rem;
+      background-color: #fff;
+      overflow: hidden;
+    }
+
+    table.data-table.draft-table tbody tr.draft-main {
+      display: grid;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    table.data-table.draft-table tbody tr.draft-detail {
+      display: block;
+      width: 100%;
+      border-top: var(--table-border-width) solid var(--table-border-color);
+    }
+
+    table.data-table.draft-table tbody tr.draft-detail td {
+      display: block;
+      width: 100%;
     }
   }
 }
