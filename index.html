@@ -2,7 +2,31 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/site_logos/basketball.png" />
+    <link rel="icon" type="image/png" href="/site_logos/favicon-basketball.png" id="site-favicon" />
+    <script>
+      (function () {
+        var logos = [
+          "/site_logos/favicon-baseball.png",
+          "/site_logos/favicon-basketball.png",
+          "/site_logos/favicon-football.png",
+        ];
+        var key = "wins-pool-site-logo-index";
+        var previous = -1;
+        try {
+          var raw = localStorage.getItem(key);
+          if (raw != null) previous = parseInt(raw, 10);
+        } catch (e) {}
+        var index =
+          isFinite(previous) && previous >= 0
+            ? (previous + 1) % logos.length
+            : Math.floor(Math.random() * logos.length);
+        try {
+          localStorage.setItem(key, String(index));
+        } catch (e) {}
+        var link = document.getElementById("site-favicon");
+        if (link) link.setAttribute("href", logos[index]);
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WinsPool</title>
   </head>
