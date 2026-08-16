@@ -1,16 +1,25 @@
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import PropTypes from "prop-types";
 
-export default function Toggle({ item, options, setItem }) {
-  const handleChange = (_, newSport) => {
-    if (newSport != null) {
-      setItem(newSport);
+type ToggleProps<T extends string> = {
+  item: T;
+  options: readonly T[];
+  setItem: (value: T) => void;
+};
+
+export default function Toggle<T extends string>({
+  item,
+  options,
+  setItem,
+}: ToggleProps<T>) {
+  const handleChange = (_: unknown, newValue: T | null) => {
+    if (newValue != null) {
+      setItem(newValue);
     }
   };
 
   return (
-    <div className="buttons">
+    <div className="my-2">
       <ToggleButtonGroup
         value={item || null}
         exclusive
@@ -26,9 +35,3 @@ export default function Toggle({ item, options, setItem }) {
     </div>
   );
 }
-
-Toggle.propTypes = {
-  item: PropTypes.string.isRequired,
-  options: PropTypes.array.isRequired,
-  setItem: PropTypes.func.isRequired,
-};

@@ -1,7 +1,7 @@
 {
     "headers": [
       {
-        "source": "/logos/(.*)",
+        "source": "/team_logos/(.*)",
         "headers": [
           {
             "key": "Cache-Control",
