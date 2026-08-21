@@ -1,72 +1,65 @@
 # Wins Pool Tracker
 
-## Check it Out!
+**Live:** [winspool.vercel.app](https://winspool.vercel.app/)
 
-[winspool-client.vercel.app/](https://winspool-client.vercel.app/)
+Dashboard for a friends fantasy-style **wins pool**: you draft pro teams, then your score is the sum of those teams’ wins. The site shows owner standings, head-to-head records, and the full draft for MLB, NBA, NFL, and WNBA.
 
-## Overview
+Built by Noah Ford. Data is scraped and published by the [winspool](https://github.com/nhford/winspool) Python backend, stored in Supabase, and read here through a Vercel serverless function.
 
-Wins Pool Tracker is a full-stack application built to track and analyze team performance in my friends fantasy-style competition of Winspool. The dashboard leverages data from Basketball Reference and Pro Football Reference to provide up-to-date insights and engaging visualizations of league standings, head to head records, and more. The project utilizes a fully-piped backend-to-frontend architecture, with daily data updates via cron jobs, a python backend in Jupyter Notebook, and a SQL client hosted on Supabase.
+## What it does
 
-## Key Features:
+- **Sport / year toggles** — Switch among MLB, NBA, NFL, and WNBA and the seasons that have published data (currently MLB 2025–2026, NBA 2024–2025, NFL 2024–2025, WNBA 2026).
+- **Current standings** — Owner totals (wins and games), drafted-team logos in pick order, and recent form (last 10 owner-team games). Sort by wins, games, or form.
+- **Head to head** — How each owner’s clubs have fared against every other owner’s clubs.
+- **Full draft** — Every pick with team, owner, record, win pace, over/under, and expected wins.
+- **How it works** — Draft teams, sum their wins, highest total wins the pool.
 
-Real-time team performance data fetched from external sources (Basketball Reference & Pro Football Reference)
-Fully integrated frontend and backend: SQL queries and API calls for fetching and displaying data
-Hosted frontend on Vercel for quick and easy access
-Supabase used as the free, reliable database solution for data persistence
+The default sport follows the calendar (MLB / WNBA in summer, NFL in fall, NBA in winter/spring).
 
-### Technologies Used
+## Stack
 
-#### Frontend:
+| Layer | Choice |
+| --- | --- |
+| Frontend | React 18 + TypeScript, Vite |
+| UI | Tailwind CSS + MUI |
+| Data | Vercel serverless function (`api/pool-data.js`) → Supabase |
+| Hosting | Vercel |
 
-- ReactJS
-- CSS for styling
-- Deployed via Vercel
+The Python scraper lives in a separate repo ([winspool](https://github.com/nhford/winspool)). GitHub Actions there refresh standings on a sport-specific schedule and upsert to Supabase.
 
-#### Backend:
+## Local development
 
-- Jupyter Notebooks (Python)
-- Web scraping from Basketball Reference and Pro Football Reference
-- SQL queries using Supabase to store, retrieve, and manage data
-- Github Actions for daily automated updates
+```bash
+npm install
+# create .env.local (see below)
+npm run dev
+```
 
-#### Database:
+Required env (Vercel / `.env.local`):
 
-- Supabase (Free-tier hosting for easy, distributed SQL storage)
+- `SUPABASE_URL`
+- `SUPABASE_ANON_KEY`
 
-## Architecture
+`npm run dev` serves the Vite app and the `/api/pool-data` function via `vite-plugin-vercel`. Production builds with `npm run build`.
 
-The application consists of two main parts:
+## Project layout
 
-### Backend:
+```
+src/
+  main.tsx                 # shell: title, provider, layout, signature
+  PoolDataContext.tsx      # fetches api/pool-data once, shares payload
+  poolData.ts
+  types.ts
+  components/
+    SiteLayout.tsx         # sport/year toggles + sections
+    content/               # CurrentStandings, HeadToHead, FullDraft, HowTo
+    utility/               # Title, Toggle, LastUpdated, SortChips, Signature
+api/
+  pool-data.js             # Vercel function: read Supabase tables
+```
 
-Jupyter notebooks that scrape the necessary data (team standings, statistics, etc.) from Basketball Reference and Pro Football Reference.
-SQL queries are used to insert, update, and manage the data in the Supabase.
-Github actions workflows are scheduled to in the evening, ensuring the data is pulled and updated automatically.
+Supabase tables: `{sport}_standings`, `{sport}_ownersh2h` for `nfl` / `nba` / `mlb` / `wnba`, plus `update_time`.
 
-### Frontend:
+## Related repo
 
-The React-based dashboard is deployed on Vercel, where users can interact with the data, view statistics, and track team performance in real-time.
-The frontend is integrated with the backend through fetch requests to the backend API, allowing seamless interaction with the live data stored in the database.
-
-## How It Works
-
-### Data Collection:
-
-Every day, cron tasks trigger Python scripts running in Jupyter notebooks. These notebooks scrape relevant team data from Basketball Reference and Pro Football Reference, clean it, and push it to Supabase.
-
-### Database:
-
-The data is stored in a SQL client, Supabase. SQL queries are used to fetch the data, which is then displayed on the frontend.
-
-### Frontend Display:
-
-The React frontend makes fetch requests to the backend to retrieve the latest data. This data is displayed in an easy-to-understand format, helping users quickly view key insights and statistics.
-
-### Github Actions:
-
-Set up using a github action workflow, the backend Jupyter notebook is run at scheduled intervals each day. These notebooks perform their API requests, transform the data, and push to the database.
-
-## Deployment
-
-The frontend is deployed to Vercel, making it accessible from any browser. The backend processes are managed through Jupyter Notebooks and the database is hosted on Supabase, which provides a free-tier for easy hosting and scaling.
+Backend pipeline: [nhford/winspool](https://github.com/nhford/winspool)
