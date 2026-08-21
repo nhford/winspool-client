@@ -5,12 +5,14 @@ type ToggleProps<T extends string> = {
   item: T;
   options: readonly T[];
   setItem: (value: T) => void;
+  labels?: Partial<Record<T, string>>;
 };
 
 export default function Toggle<T extends string>({
   item,
   options,
   setItem,
+  labels,
 }: ToggleProps<T>) {
   const handleChange = (_: unknown, newValue: T | null) => {
     if (newValue != null) {
@@ -28,7 +30,7 @@ export default function Toggle<T extends string>({
       >
         {options.map((option) => (
           <ToggleButton key={option} value={option}>
-            {option.toUpperCase()}
+            {labels?.[option] ?? option.toUpperCase()}
           </ToggleButton>
         ))}
       </ToggleButtonGroup>

@@ -7,8 +7,9 @@ import {
   type SetStateAction,
 } from "react";
 import { usePoolData } from "../../PoolDataContext";
-import { handleSort, imgPath } from "../../utils";
+import { handleSort } from "../../utils";
 import type { H2HRow, SortedState, Sport } from "../../types";
+import TeamMark from "../utility/TeamMark";
 
 type OwnerH2HRow = {
   owner: string;
@@ -259,8 +260,9 @@ export default function HeadToHead({ sport, year }: HeadToHeadProps) {
                           .map((team, i) => (
                             <tr key={i} className="bg-white">
                               <td className="whitespace-nowrap">
-                                <img
-                                  src={imgPath(sport, team.abbrev ?? "")}
+                                <TeamMark
+                                  sport={sport}
+                                  abbrev={team.abbrev ?? ""}
                                   alt={`${team.abbrev} Logo`}
                                   className="mx-auto w-[min(2.75rem,8vw)] p-1"
                                 />

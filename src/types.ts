@@ -1,4 +1,4 @@
-export type Sport = "mlb" | "nba" | "nfl" | "wnba";
+export type Sport = "mlb" | "nba" | "nfl" | "wnba" | "fantasy";
 
 export type SortDir = "asc" | "desc";
 
@@ -51,5 +51,7 @@ export type PoolDataPayload = {
   mlb_h2h: H2HRow[];
   wnba_standings: StandingRow[];
   wnba_h2h: H2HRow[];
+  fantasy_standings: StandingRow[];
+  fantasy_h2h: H2HRow[];
   updated: UpdateTimeRow[];
 };
