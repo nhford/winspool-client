@@ -1,8 +1,9 @@
 import { useLayoutEffect, useState } from "react";
 import { usePoolData } from "../../PoolDataContext";
-import { handleSort, imgPath, teamNickname } from "../../utils";
+import { handleSort, teamNickname } from "../../utils";
 import type { H2HRow, SortedState, Sport, StandingRow } from "../../types";
 import SortChips, { type SortChipOption } from "../utility/SortChips";
+import TeamMark from "../utility/TeamMark";
 
 type FullDraftProps = {
   sport: Sport;
@@ -78,7 +79,11 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
       payload[`${sport}_standings`] || [],
       payload[`${sport}_h2h`] || [],
     );
-    setData(rows);
+    const nextRows =
+      sport === "fantasy"
+        ? rows.map((row) => ({ ...row, nickname: String(row.team) }))
+        : rows;
+    setData(nextRows);
     setFormWindow(windowSize);
     setExpandedRows(
       Object.fromEntries(rows.map((row) => [row.abbrev, false])),
@@ -97,17 +102,24 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
     return <p className="my-1 px-4 text-sm sm:text-base">Loading..</p>;
   }
 
+  const isFantasy = sport === "fantasy";
   const formLabelShort = formWindow != null ? `L${formWindow}` : "Form";
   const formLabelLong =
     formWindow != null ? `Last ${formWindow}` : "Form";
 
-  const draftSortChips: SortChipOption[] = [
-    { key: "pick_int", label: "Pick", natural: "asc" },
-    { key: "pct", label: "Record", natural: "desc" },
-    { key: "recent_wins", label: formLabelShort, natural: "desc" },
-    { key: "nickname", label: "Team", natural: "asc" },
-    { key: "owner", label: "Owner", natural: "asc" },
-  ];
+  const draftSortChips: SortChipOption[] = isFantasy
+    ? [
+        { key: "pick_int", label: "Pick", natural: "asc" },
+        { key: "nickname", label: "Team", natural: "asc" },
+        { key: "owner", label: "Owner", natural: "asc" },
+      ]
+    : [
+        { key: "pick_int", label: "Pick", natural: "asc" },
+        { key: "pct", label: "Record", natural: "desc" },
+        { key: "recent_wins", label: formLabelShort, natural: "desc" },
+        { key: "nickname", label: "Team", natural: "asc" },
+        { key: "owner", label: "Owner", natural: "asc" },
+      ];
 
   return (
     <div className="w-full">
@@ -177,45 +189,49 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
               >
                 Owner
               </th>
-              <th
-                className="cursor-pointer px-1"
-                onClick={() =>
-                  handleSort(
-                    "pct",
-                    sorted,
-                    setSorted,
-                    data,
-                    setData,
-                    "desc",
-                    setExpandedRows,
-                    "nickname",
-                  )
-                }
-              >
-                Record
-              </th>
-              <th
-                className="cursor-pointer px-1"
-                onClick={() =>
-                  handleSort(
-                    "recent_wins",
-                    sorted,
-                    setSorted,
-                    data,
-                    setData,
-                    "desc",
-                    setExpandedRows,
-                    "nickname",
-                  )
-                }
-                title={
-                  formWindow != null
-                    ? `Record over each team's last ${formWindow} games`
-                    : "Recent form"
-                }
-              >
-                {formLabelLong}
-              </th>
+              {!isFantasy && (
+                <th
+                  className="cursor-pointer px-1"
+                  onClick={() =>
+                    handleSort(
+                      "pct",
+                      sorted,
+                      setSorted,
+                      data,
+                      setData,
+                      "desc",
+                      setExpandedRows,
+                      "nickname",
+                    )
+                  }
+                >
+                  Record
+                </th>
+              )}
+              {!isFantasy && (
+                <th
+                  className="cursor-pointer px-1"
+                  onClick={() =>
+                    handleSort(
+                      "recent_wins",
+                      sorted,
+                      setSorted,
+                      data,
+                      setData,
+                      "desc",
+                      setExpandedRows,
+                      "nickname",
+                    )
+                  }
+                  title={
+                    formWindow != null
+                      ? `Record over each team's last ${formWindow} games`
+                      : "Recent form"
+                  }
+                >
+                  {formLabelLong}
+                </th>
+              )}
             </tr>
           </thead>
           {data.map((row) => {
@@ -225,28 +241,43 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
             return (
               <tbody key={row.abbrev} className="bg-white">
                 <tr
-                  className="draft-main group cursor-pointer bg-white transition-colors hover:bg-neutral-100 max-md:grid max-md:w-full max-md:grid-cols-[auto_1fr_auto_auto] max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-0.5 max-md:px-2.5 max-md:py-2"
-                  role="button"
-                  tabIndex={0}
-                  aria-expanded={isExpanded}
-                  aria-label={`${isExpanded ? "Collapse" : "Expand"} details for ${row.team}`}
-                  onClick={toggle}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault();
-                      toggle();
-                    }
-                  }}
+                  className={
+                    isFantasy
+                      ? "draft-main bg-white max-md:grid max-md:w-full max-md:grid-cols-[auto_1fr_auto] max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-0.5 max-md:px-2.5 max-md:py-2"
+                      : "draft-main group cursor-pointer bg-white transition-colors hover:bg-neutral-100 max-md:grid max-md:w-full max-md:grid-cols-[auto_1fr_auto_auto] max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-0.5 max-md:px-2.5 max-md:py-2"
+                  }
+                  role={isFantasy ? undefined : "button"}
+                  tabIndex={isFantasy ? undefined : 0}
+                  aria-expanded={isFantasy ? undefined : isExpanded}
+                  aria-label={
+                    isFantasy
+                      ? undefined
+                      : `${isExpanded ? "Collapse" : "Expand"} details for ${row.team}`
+                  }
+                  onClick={isFantasy ? undefined : toggle}
+                  onKeyDown={
+                    isFantasy
+                      ? undefined
+                      : (event) => {
+                          if (event.key === "Enter" || event.key === " ") {
+                            event.preventDefault();
+                            toggle();
+                          }
+                        }
+                  }
                 >
                   <td className="max-md:col-start-1 max-md:row-span-2 max-md:row-start-1 max-md:border-none max-md:p-0">
-                    <img
+                    <TeamMark
+                      sport={sport}
+                      abbrev={row.abbrev}
+                      alt={row.team}
                       className="mx-auto w-[min(2.75rem,8vw)] p-1 max-md:mx-0 max-md:w-10 max-md:p-0"
-                      src={imgPath(sport, row.abbrev)}
-                      alt={row.abbrev + " Logo"}
                     />
                   </td>
                   <td className="text-[min(1rem,3.5vw)] group-hover:underline decoration-black underline-offset-2 max-md:col-start-2 max-md:row-start-1 max-md:border-none max-md:p-0 max-md:text-left max-md:text-base max-md:font-semibold max-md:no-underline">
-                    <span className="md:hidden">{row.nickname}</span>
+                    <span className="md:hidden">
+                      {isFantasy ? row.team : row.nickname}
+                    </span>
                     <span className="max-md:hidden">{row.team}</span>
                   </td>
                   <td className="max-md:col-start-3 max-md:row-start-1 max-md:border-none max-md:p-0">
@@ -259,26 +290,30 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
                   <td className="text-[min(1rem,3.5vw)] max-md:col-start-2 max-md:row-start-2 max-md:border-none max-md:p-0 max-md:text-left max-md:text-sm max-md:text-neutral-600">
                     {row.owner}
                   </td>
-                  <td className="max-md:col-start-4 max-md:row-start-1 max-md:border-none max-md:p-0">
-                    <span className="max-md:hidden">{String(row.record ?? "")}</span>
-                    <div className="hidden max-md:flex flex-col items-center justify-center leading-snug">
-                      <span className="text-base">{String(row.record ?? "")}</span>
-                      <span className="-mt-0.5 text-[0.6em]">Record</span>
-                    </div>
-                  </td>
-                  <td className="max-md:col-start-3 max-md:col-span-2 max-md:row-start-2 max-md:border-none max-md:p-0 max-md:text-right max-md:text-sm max-md:text-neutral-600">
-                    <span className="max-md:hidden">{row.recent_record}</span>
-                    <span className="hidden max-md:inline">
-                      {formLabelShort}: {row.recent_record}
-                      {row.recent_n > 0 &&
-                      formWindow != null &&
-                      row.recent_n < formWindow
-                        ? ` (${row.recent_n} gms)`
-                        : ""}
-                    </span>
-                  </td>
+                  {!isFantasy && (
+                    <td className="max-md:col-start-4 max-md:row-start-1 max-md:border-none max-md:p-0">
+                      <span className="max-md:hidden">{String(row.record ?? "")}</span>
+                      <div className="hidden max-md:flex flex-col items-center justify-center leading-snug">
+                        <span className="text-base">{String(row.record ?? "")}</span>
+                        <span className="-mt-0.5 text-[0.6em]">Record</span>
+                      </div>
+                    </td>
+                  )}
+                  {!isFantasy && (
+                    <td className="max-md:col-start-3 max-md:col-span-2 max-md:row-start-2 max-md:border-none max-md:p-0 max-md:text-right max-md:text-sm max-md:text-neutral-600">
+                      <span className="max-md:hidden">{row.recent_record}</span>
+                      <span className="hidden max-md:inline">
+                        {formLabelShort}: {row.recent_record}
+                        {row.recent_n > 0 &&
+                        formWindow != null &&
+                        row.recent_n < formWindow
+                          ? ` (${row.recent_n} gms)`
+                          : ""}
+                      </span>
+                    </td>
+                  )}
                 </tr>
-                {isExpanded && (
+                {!isFantasy && isExpanded && (
                   <tr className="draft-detail bg-white">
                     <td
                       colSpan={6}

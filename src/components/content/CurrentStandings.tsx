@@ -1,8 +1,9 @@
 import { useLayoutEffect, useState, type CSSProperties } from "react";
 import { usePoolData } from "../../PoolDataContext";
-import { handleSort, imgPath } from "../../utils";
+import { handleSort } from "../../utils";
 import type { H2HRow, SortedState, Sport, StandingRow } from "../../types";
 import SortChips, { type SortChipOption } from "../utility/SortChips";
+import TeamMark from "../utility/TeamMark";
 
 /** Fixed logo slot size in px (desktop). Logos are contained within this box. */
 const LOGO_FULL_SIZE = 68;
@@ -113,7 +114,11 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
       logoScaleByAbbrev: scales,
       formWindow: windowSize,
       maxTeams: teamCols,
-    } = buildStandings(year, payload[`${sport}_standings`], payload[`${sport}_h2h`]);
+    } = buildStandings(
+      year,
+      payload[`${sport}_standings`] || [],
+      payload[`${sport}_h2h`] || [],
+    );
 
     setData(rows);
     setLogoScaleByAbbrev(scales);
@@ -247,8 +252,9 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
                         key={idx}
                         className="flex h-full min-h-0 min-w-0 w-full items-center justify-center overflow-hidden"
                       >
-                        <img
-                          src={imgPath(sport, abbrev)}
+                        <TeamMark
+                          sport={sport}
+                          abbrev={abbrev}
                           alt={abbrev + " Logo"}
                           className="max-h-full max-w-full object-contain p-0.5"
                           style={{
