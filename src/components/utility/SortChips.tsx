@@ -16,6 +16,7 @@ type SortChipsProps<T extends Record<string, unknown>> = {
   setData: Dispatch<SetStateAction<T[]>>;
   setExpandedRows?: Dispatch<SetStateAction<Record<string, boolean>>>;
   secondary?: string;
+  onSort?: (key: string, natural: SortDir) => void;
   "aria-label"?: string;
 };
 
@@ -27,6 +28,7 @@ export default function SortChips<T extends Record<string, unknown>>({
   setData,
   setExpandedRows,
   secondary,
+  onSort,
   "aria-label": ariaLabel = "Sort",
 }: SortChipsProps<T>) {
   return (
@@ -49,16 +51,18 @@ export default function SortChips<T extends Record<string, unknown>>({
                 : "border border-neutral-300 bg-white px-2.5 py-1 text-sm text-neutral-700"
             }
             onClick={() =>
-              handleSort(
-                option.key,
-                sorted,
-                setSorted,
-                data,
-                setData,
-                option.natural ?? "asc",
-                setExpandedRows,
-                secondary,
-              )
+              onSort
+                ? onSort(option.key, option.natural ?? "asc")
+                : handleSort(
+                    option.key,
+                    sorted,
+                    setSorted,
+                    data,
+                    setData,
+                    option.natural ?? "asc",
+                    setExpandedRows,
+                    secondary,
+                  )
             }
           >
             {option.label}

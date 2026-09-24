@@ -11,6 +11,7 @@ export type StandingRow = {
   year: number;
   pick: number | string;
   pick_int?: number;
+  price?: number | string | null;
   owner: string;
   team: string;
   abbrev: string;

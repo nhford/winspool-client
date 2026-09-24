@@ -13,7 +13,7 @@ import HowTo from "./content/HowTo";
 const YEAR_OPTIONS: Record<Sport, string[]> = {
   mlb: ["2026", "2025"],
   nba: ["2025", "2024"],
-  nfl: ["2025", "2024"],
+  nfl: ["2026", "2025", "2024"],
   wnba: ["2026"],
   fantasy: ["2026"],
 };
