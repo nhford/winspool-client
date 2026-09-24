@@ -37,7 +37,14 @@ function buildStandings(
 } {
   const yearStandings = standings
     .filter((row) => row.year == year)
-    .sort((a, b) => Number(a.pick) - Number(b.pick));
+    .sort((a, b) => {
+      const aPrice = Number(a.price);
+      const bPrice = Number(b.price);
+      if (Number.isFinite(aPrice) && Number.isFinite(bPrice) && aPrice !== bPrice) {
+        return bPrice - aPrice;
+      }
+      return Number(a.pick) - Number(b.pick);
+    });
 
   const formByOwner: Record<
     string,
@@ -70,7 +77,7 @@ function buildStandings(
     }
     acc[team.owner].wins += parseInt(String(team.wins), 10);
     acc[team.owner].games += parseInt(String(team.games), 10);
-    // yearStandings is pick-ordered, so this is draft order per owner
+    // Auction years are price-ordered; snake years stay in pick order.
     acc[team.owner].teams.push(team.abbrev);
     return acc;
   }, {});
