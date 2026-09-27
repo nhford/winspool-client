@@ -162,6 +162,8 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
   const draftSortChips: SortChipOption[] = isFantasy
     ? [
         { key: "pick_int", label: "Pick", natural: "asc" },
+        { key: "pct", label: "Record", natural: "desc" },
+        { key: "recent_wins", label: formLabelShort, natural: "desc" },
         { key: "nickname", label: "Team", natural: "asc" },
         { key: "owner", label: "Owner", natural: "asc" },
       ]
@@ -237,16 +239,13 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
               >
                 Owner
               </th>
-              {!isFantasy && (
-                <th
-                  className="cursor-pointer px-1"
-                  onClick={() => sortDraft("pct", "desc")}
-                >
-                  Record
-                </th>
-              )}
-              {!isFantasy && (
-                <th
+              <th
+                className="cursor-pointer px-1"
+                onClick={() => sortDraft("pct", "desc")}
+              >
+                Record
+              </th>
+              <th
                   className="cursor-pointer px-1"
                   onClick={() => sortDraft("recent_wins", "desc")}
                   title={
@@ -257,7 +256,6 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
                 >
                   {formLabelLong}
                 </th>
-              )}
             </tr>
           </thead>
           {data.map((row) => {
@@ -270,7 +268,7 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
                 <tr
                   className={
                     isFantasy
-                      ? "draft-main bg-white max-md:grid max-md:w-full max-md:grid-cols-[auto_1fr_auto] max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-0.5 max-md:px-2.5 max-md:py-2"
+                      ? "draft-main bg-white max-md:grid max-md:w-full max-md:grid-cols-[auto_1fr_auto_auto] max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-0.5 max-md:px-2.5 max-md:py-2"
                       : auction
                         ? "draft-main group cursor-pointer bg-white transition-colors hover:bg-neutral-100 max-md:grid max-md:w-full max-md:grid-cols-[auto_1fr_auto_auto_auto] max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-0.5 max-md:px-2.5 max-md:py-2"
                         : "draft-main group cursor-pointer bg-white transition-colors hover:bg-neutral-100 max-md:grid max-md:w-full max-md:grid-cols-[auto_1fr_auto_auto] max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-0.5 max-md:px-2.5 max-md:py-2"
@@ -334,23 +332,20 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
                   <td className="text-[min(1rem,3.5vw)] max-md:col-start-2 max-md:row-start-2 max-md:border-none max-md:p-0 max-md:text-left max-md:text-sm max-md:text-neutral-600">
                     {row.owner}
                   </td>
-                  {!isFantasy && (
-                    <td
-                      className={
-                        auction
-                          ? "max-md:col-start-5 max-md:row-start-1 max-md:border-none max-md:p-0"
-                          : "max-md:col-start-4 max-md:row-start-1 max-md:border-none max-md:p-0"
-                      }
-                    >
+                  <td
+                    className={
+                      auction
+                        ? "max-md:col-start-5 max-md:row-start-1 max-md:border-none max-md:p-0"
+                        : "max-md:col-start-4 max-md:row-start-1 max-md:border-none max-md:p-0"
+                    }
+                  >
                       <span className="max-md:hidden">{String(row.record ?? "")}</span>
                       <div className="hidden max-md:flex flex-col items-center justify-center leading-snug">
                         <span className="text-base">{String(row.record ?? "")}</span>
                         <span className="-mt-0.5 text-[0.6em]">Record</span>
                       </div>
-                    </td>
-                  )}
-                  {!isFantasy && (
-                    <td
+                  </td>
+                  <td
                       className={
                         auction
                           ? "max-md:col-start-3 max-md:col-span-3 max-md:row-start-2 max-md:border-none max-md:p-0 max-md:text-right max-md:text-sm max-md:text-neutral-600"
@@ -367,7 +362,6 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
                           : ""}
                       </span>
                     </td>
-                  )}
                 </tr>
                 {!isFantasy && isExpanded && (
                   <tr className="draft-detail bg-white">

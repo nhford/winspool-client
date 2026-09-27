@@ -15,8 +15,10 @@ function withFantasy(payload: Partial<PoolDataPayload> = {}): PoolDataPayload {
     wnba_standings: payload.wnba_standings ?? [],
     wnba_h2h: payload.wnba_h2h ?? [],
     updated: payload.updated ?? [],
-    fantasy_standings: FANTASY_STANDINGS,
-    fantasy_h2h: FANTASY_H2H,
+    fantasy_standings: payload.fantasy_standings?.length
+      ? payload.fantasy_standings
+      : FANTASY_STANDINGS,
+    fantasy_h2h: payload.fantasy_h2h?.length ? payload.fantasy_h2h : FANTASY_H2H,
   };
 }
 

@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import type { Sport } from "../../types";
 import { imgPath } from "../../utils";
 
@@ -33,6 +33,19 @@ export default function TeamMark({
   style,
 }: TeamMarkProps) {
   const label = alt ?? `${abbrev} Logo`;
+  const [failedAbbrev, setFailedAbbrev] = useState<string | null>(null);
+
+  if (sport === "fantasy" && failedAbbrev !== abbrev) {
+    return (
+      <img
+        src={`/team_logos/fantasy/${abbrev.toLowerCase()}.jpg`}
+        alt={label}
+        className={`aspect-square rounded-full object-cover p-0 ${className ?? ""}`}
+        style={style}
+        onError={() => setFailedAbbrev(abbrev)}
+      />
+    );
+  }
 
   if (sport === "fantasy") {
     const backgroundColor = FANTASY_COLORS[abbrev] ?? "#525252";

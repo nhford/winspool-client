@@ -38,24 +38,18 @@ export default function SiteLayout() {
         setItem={setSport}
         labels={{ fantasy: "Fantasy" }}
       />
-      {!isFantasy && <LastUpdated sport={sport} />}
-      {!isFantasy && (
-        <Toggle
-          item={year}
-          options={YEAR_OPTIONS[sport]}
-          setItem={setYear}
-        />
-      )}
-      {!isFantasy && (
-        <>
-          <h2 className="my-3 text-xl font-semibold sm:text-2xl">
-            Current Standings
-          </h2>
-          <CurrentStandings sport={sport} year={parseInt(year, 10)} />
-          <h2 className="my-3 text-xl font-semibold sm:text-2xl">Head to Head</h2>
-          <HeadToHead sport={sport} year={parseInt(year, 10)} />
-        </>
-      )}
+      <LastUpdated sport={sport} />
+      <Toggle
+        item={year}
+        options={YEAR_OPTIONS[sport]}
+        setItem={setYear}
+      />
+      <h2 className="my-3 text-xl font-semibold sm:text-2xl">
+        Current Standings
+      </h2>
+      <CurrentStandings sport={sport} year={parseInt(year, 10)} />
+      <h2 className="my-3 text-xl font-semibold sm:text-2xl">Head to Head</h2>
+      <HeadToHead sport={sport} year={parseInt(year, 10)} />
       <h2 className="my-3 text-xl font-semibold sm:text-2xl">Full Draft</h2>
       <FullDraft sport={sport} year={parseInt(year, 10)} />
       {!isFantasy && <HowTo />}
