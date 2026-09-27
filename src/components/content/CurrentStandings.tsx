@@ -138,9 +138,22 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
     return <p className="my-1 px-4 text-sm sm:text-base">Loading..</p>;
   }
 
-  const formLabelShort = formWindow != null ? `L${formWindow}` : "Form";
-  const formLabelLong =
-    formWindow != null ? `Last ${formWindow}` : "Form";
+  const isFantasyWeek = sport === "fantasy";
+  const formLabelShort = isFantasyWeek
+    ? "This week"
+    : formWindow != null
+      ? `L${formWindow}`
+      : "Form";
+  const formLabelLong = isFantasyWeek
+    ? "This week"
+    : formWindow != null
+      ? `Last ${formWindow}`
+      : "Form";
+  const formTitle = isFantasyWeek
+    ? "Matchup and median results for this week"
+    : formWindow != null
+      ? `Record over each owner's last ${formWindow} team-games`
+      : "Recent form";
 
   const standingsSortChips: SortChipOption[] = [
     { key: "owner", label: "Owner", natural: "asc" },
@@ -197,11 +210,7 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
                   "desc",
                 )
               }
-              title={
-                formWindow != null
-                  ? `Record over each owner's last ${formWindow} team-games`
-                  : "Recent form"
-              }
+              title={formTitle}
             >
               <span className="md:hidden">{formLabelShort}</span>
               <span className="hidden md:inline">{formLabelLong}</span>
