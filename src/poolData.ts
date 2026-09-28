@@ -19,6 +19,8 @@ function withFantasy(payload: Partial<PoolDataPayload> = {}): PoolDataPayload {
       ? payload.fantasy_standings
       : FANTASY_STANDINGS,
     fantasy_h2h: payload.fantasy_h2h?.length ? payload.fantasy_h2h : FANTASY_H2H,
+    traitors_standings: payload.traitors_standings ?? [],
+    traitors_h2h: payload.traitors_h2h ?? [],
   };
 }
 

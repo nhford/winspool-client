@@ -99,7 +99,7 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
       payload[`${sport}_h2h`] || [],
     );
     const nextRows =
-      sport === "fantasy"
+      sport === "fantasy" || sport === "traitors"
         ? rows.map((row) => ({ ...row, nickname: String(row.team) }))
         : rows;
     const auction = nextRows.some(isAuctionRow);
@@ -126,7 +126,9 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
   }
 
   const isFantasy = sport === "fantasy";
-  const auction = !isFantasy && data.some(isAuctionRow);
+  const isTraitors = sport === "traitors";
+  const isPlain = isFantasy || isTraitors;
+  const auction = !isPlain && data.some(isAuctionRow);
   const budget =
     auction && sport === "nfl" && year === 2026 ? NFL_2026_AUCTION_BUDGET : null;
   const formLabelShort = formWindow != null ? `L${formWindow}` : "Form";
@@ -159,7 +161,15 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
     );
   };
 
-  const draftSortChips: SortChipOption[] = isFantasy
+  const draftSortChips: SortChipOption[] = isTraitors
+    ? [
+        { key: "pick_int", label: "Pick", natural: "asc" },
+        { key: "wins", label: "Episodes", natural: "desc" },
+        { key: "nickname", label: "Player", natural: "asc" },
+        { key: "owner", label: "Owner", natural: "asc" },
+        { key: "record", label: "Status", natural: "asc" },
+      ]
+    : isFantasy
     ? [
         { key: "pick_int", label: "Pick", natural: "asc" },
         { key: "pct", label: "Record", natural: "desc" },
@@ -217,7 +227,7 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
                 className="cursor-pointer px-1"
                 onClick={() => sortDraft("nickname", "asc")}
               >
-                Team
+                {isTraitors ? "Player" : "Team"}
               </th>
               {auction && (
                 <th
@@ -241,20 +251,24 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
               </th>
               <th
                 className="cursor-pointer px-1"
-                onClick={() => sortDraft("pct", "desc")}
+                onClick={() => sortDraft(isTraitors ? "wins" : "pct", "desc")}
               >
-                Record
+                {isTraitors ? "Episodes" : "Record"}
               </th>
               <th
                   className="cursor-pointer px-1"
-                  onClick={() => sortDraft("recent_wins", "desc")}
+                  onClick={() =>
+                    sortDraft(isTraitors ? "record" : "recent_wins", isTraitors ? "asc" : "desc")
+                  }
                   title={
-                    formWindow != null
-                      ? `Record over each team's last ${formWindow} games`
-                      : "Recent form"
+                    isTraitors
+                      ? "Still in, murdered, or banished"
+                      : formWindow != null
+                        ? `Record over each team's last ${formWindow} games`
+                        : "Recent form"
                   }
                 >
-                  {formLabelLong}
+                  {isTraitors ? "Status" : formLabelLong}
                 </th>
             </tr>
           </thead>
@@ -263,27 +277,29 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
             const toggle = () => toggleExpand(row.abbrev);
             const pick = parseInt(String(row.pick), 10);
             const bid = formatBid(row.price);
+            const episodes = String(row.wins ?? "");
+            const status = String(row.record ?? "");
             return (
               <tbody key={row.abbrev} className="bg-white">
                 <tr
                   className={
-                    isFantasy
+                    isPlain
                       ? "draft-main bg-white max-md:grid max-md:w-full max-md:grid-cols-[auto_1fr_auto_auto] max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-0.5 max-md:px-2.5 max-md:py-2"
                       : auction
                         ? "draft-main group cursor-pointer bg-white transition-colors hover:bg-neutral-100 max-md:grid max-md:w-full max-md:grid-cols-[auto_1fr_auto_auto_auto] max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-0.5 max-md:px-2.5 max-md:py-2"
                         : "draft-main group cursor-pointer bg-white transition-colors hover:bg-neutral-100 max-md:grid max-md:w-full max-md:grid-cols-[auto_1fr_auto_auto] max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-0.5 max-md:px-2.5 max-md:py-2"
                   }
-                  role={isFantasy ? undefined : "button"}
-                  tabIndex={isFantasy ? undefined : 0}
-                  aria-expanded={isFantasy ? undefined : isExpanded}
+                  role={isPlain ? undefined : "button"}
+                  tabIndex={isPlain ? undefined : 0}
+                  aria-expanded={isPlain ? undefined : isExpanded}
                   aria-label={
-                    isFantasy
+                    isPlain
                       ? undefined
                       : `${isExpanded ? "Collapse" : "Expand"} details for ${row.team}`
                   }
-                  onClick={isFantasy ? undefined : toggle}
+                  onClick={isPlain ? undefined : toggle}
                   onKeyDown={
-                    isFantasy
+                    isPlain
                       ? undefined
                       : (event) => {
                           if (event.key === "Enter" || event.key === " ") {
@@ -303,7 +319,7 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
                   </td>
                   <td className="text-[min(1rem,3.5vw)] group-hover:underline decoration-black underline-offset-2 max-md:col-start-2 max-md:row-start-1 max-md:border-none max-md:p-0 max-md:text-left max-md:text-base max-md:font-semibold max-md:no-underline">
                     <span className="md:hidden">
-                      {isFantasy ? row.team : row.nickname}
+                      {isPlain ? row.team : row.nickname}
                     </span>
                     <span className="max-md:hidden">{row.team}</span>
                   </td>
@@ -339,10 +355,10 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
                         : "max-md:col-start-4 max-md:row-start-1 max-md:border-none max-md:p-0"
                     }
                   >
-                      <span className="max-md:hidden">{String(row.record ?? "")}</span>
+                      <span className="max-md:hidden">{isTraitors ? episodes : String(row.record ?? "")}</span>
                       <div className="hidden max-md:flex flex-col items-center justify-center leading-snug">
-                        <span className="text-base">{String(row.record ?? "")}</span>
-                        <span className="-mt-0.5 text-[0.6em]">Record</span>
+                        <span className="text-base">{isTraitors ? episodes : String(row.record ?? "")}</span>
+                        <span className="-mt-0.5 text-[0.6em]">{isTraitors ? "Episodes" : "Record"}</span>
                       </div>
                   </td>
                   <td
@@ -352,18 +368,24 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
                           : "max-md:col-start-3 max-md:col-span-2 max-md:row-start-2 max-md:border-none max-md:p-0 max-md:text-right max-md:text-sm max-md:text-neutral-600"
                       }
                     >
-                      <span className="max-md:hidden">{row.recent_record}</span>
+                      <span className="max-md:hidden">{isTraitors ? status : row.recent_record}</span>
                       <span className="hidden max-md:inline">
-                        {formLabelShort}: {row.recent_record}
-                        {row.recent_n > 0 &&
-                        formWindow != null &&
-                        row.recent_n < formWindow
-                          ? ` (${row.recent_n} gms)`
-                          : ""}
+                        {isTraitors ? (
+                          status
+                        ) : (
+                          <>
+                            {formLabelShort}: {row.recent_record}
+                            {row.recent_n > 0 &&
+                            formWindow != null &&
+                            row.recent_n < formWindow
+                              ? ` (${row.recent_n} gms)`
+                              : ""}
+                          </>
+                        )}
                       </span>
                     </td>
                 </tr>
-                {!isFantasy && isExpanded && (
+                {!isPlain && isExpanded && (
                   <tr className="draft-detail bg-white">
                     <td
                       colSpan={detailCols}

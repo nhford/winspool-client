@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 type TitleProps = {
   title: string;
-  subTitle: string;
+  subTitle: ReactNode;
 };
 
 const SITE_LOGOS = [

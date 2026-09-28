@@ -16,15 +16,23 @@ const YEAR_OPTIONS: Record<Sport, string[]> = {
   nfl: ["2026", "2025", "2024"],
   wnba: ["2026"],
   fantasy: ["2026"],
+  traitors: ["2026"],
 };
 
 const SPORT_OPTIONS: Sport[] = ["mlb", "nba", "nfl", "wnba", "fantasy"];
 
+function sportFromPath(): Sport | null {
+  const path = window.location.pathname.replace(/\/$/, "");
+  if (path === "/traitors") return "traitors";
+  return null;
+}
+
 export default function SiteLayout() {
-  const initialSport = defaultSport();
+  const initialSport = sportFromPath() ?? defaultSport();
   const [sport, setSport] = useState<Sport>(initialSport);
   const [year, setYear] = useState(YEAR_OPTIONS[initialSport][0]);
   const isFantasy = sport === "fantasy";
+  const isTraitors = sport === "traitors";
 
   useEffect(() => {
     setYear(YEAR_OPTIONS[sport][0]);
@@ -32,27 +40,35 @@ export default function SiteLayout() {
 
   return (
     <div className="w-full">
-      <Toggle
-        item={sport}
-        options={SPORT_OPTIONS}
-        setItem={setSport}
-        labels={{ fantasy: "Fantasy" }}
-      />
+      {!isTraitors && (
+        <Toggle
+          item={sport}
+          options={SPORT_OPTIONS}
+          setItem={setSport}
+          labels={{ fantasy: "Fantasy" }}
+        />
+      )}
       <LastUpdated sport={sport} />
-      <Toggle
-        item={year}
-        options={YEAR_OPTIONS[sport]}
-        setItem={setYear}
-      />
+      {!isTraitors && (
+        <Toggle
+          item={year}
+          options={YEAR_OPTIONS[sport]}
+          setItem={setYear}
+        />
+      )}
       <h2 className="my-3 text-xl font-semibold sm:text-2xl">
         Current Standings
       </h2>
       <CurrentStandings sport={sport} year={parseInt(year, 10)} />
-      <h2 className="my-3 text-xl font-semibold sm:text-2xl">Head to Head</h2>
-      <HeadToHead sport={sport} year={parseInt(year, 10)} />
+      {!isTraitors && (
+        <>
+          <h2 className="my-3 text-xl font-semibold sm:text-2xl">Head to Head</h2>
+          <HeadToHead sport={sport} year={parseInt(year, 10)} />
+        </>
+      )}
       <h2 className="my-3 text-xl font-semibold sm:text-2xl">Full Draft</h2>
       <FullDraft sport={sport} year={parseInt(year, 10)} />
-      {!isFantasy && <HowTo />}
+      {!isFantasy && !isTraitors && <HowTo />}
     </div>
   );
 }

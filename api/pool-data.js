@@ -15,6 +15,7 @@ const wnba_standings = "wnba_standings";
 const wnba_h2h = "wnba_ownersh2h";
 const fantasy_standings = "fantasy_standings";
 const fantasy_h2h = "fantasy_ownersh2h";
+const traitors_standings = "traitors_standings";
 const update_time = "update_time";
 
 let supabase = null;
@@ -55,6 +56,7 @@ export default async function handler(_, res) {
       { data: wnba_h2h_result, error: wnba_h2h_error },
       { data: fantasy_standings_result, error: fantasy_standings_error },
       { data: fantasy_h2h_result, error: fantasy_h2h_error },
+      { data: traitors_standings_result, error: traitors_standings_error },
       { data: updated_result, error: updated_error },
     ] = await Promise.all([
       client.from(nfl_standings).select("*"),
@@ -67,6 +69,7 @@ export default async function handler(_, res) {
       client.from(wnba_h2h).select("*"),
       client.from(fantasy_standings).select("*"),
       client.from(fantasy_h2h).select("*"),
+      client.from(traitors_standings).select("*"),
       client.from(update_time).select("*"),
     ]);
 
@@ -92,6 +95,7 @@ export default async function handler(_, res) {
         wnba_h2h_error,
         fantasy_standings_error,
         fantasy_h2h_error,
+        traitors_standings_error,
         updated_error,
       });
       return res.status(500).json({ error: "Error fetching data from Supabase" });
@@ -113,6 +117,10 @@ export default async function handler(_, res) {
       wnba_h2h: wnba_h2h_result,
       fantasy_standings: fantasy_standings_error ? [] : withPickInt(fantasy_standings_result),
       fantasy_h2h: fantasy_h2h_error ? [] : fantasy_h2h_result,
+      traitors_standings: traitors_standings_error
+        ? []
+        : withPickInt(traitors_standings_result),
+      traitors_h2h: [],
       updated: updated_result,
     });
   } catch (error) {

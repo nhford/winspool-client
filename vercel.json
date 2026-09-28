@@ -1,4 +1,10 @@
 {
+    "rewrites": [
+      {
+        "source": "/traitors",
+        "destination": "/index.html"
+      }
+    ],
     "headers": [
       {
         "source": "/team_logos/(.*)",

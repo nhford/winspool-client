@@ -11,12 +11,26 @@ if (!rootEl) {
   throw new Error("Root element #root not found");
 }
 
+const onTraitorsPage =
+  window.location.pathname.replace(/\/$/, "") === "/traitors";
+
 createRoot(rootEl).render(
   <StrictMode>
     <div className="mx-auto w-full max-w-5xl px-2 text-center sm:px-4">
       <Title
         title={"Wins Pool"}
-        subTitle={"Who wins from each and every win in the NFL, NBA, and MLB"}
+        subTitle={
+          onTraitorsPage ? (
+            <>
+              The Traitors: New Blood — episodes each player lasts.{" "}
+              <a href="/" className="underline">
+                Back to Wins Pool
+              </a>
+            </>
+          ) : (
+            "Who wins from each and every win in the NFL, NBA, and MLB"
+          )
+        }
       />
       <PoolDataProvider>
         <SiteLayout />

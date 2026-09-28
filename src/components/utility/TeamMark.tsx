@@ -35,10 +35,11 @@ export default function TeamMark({
   const label = alt ?? `${abbrev} Logo`;
   const [failedAbbrev, setFailedAbbrev] = useState<string | null>(null);
 
-  if (sport === "fantasy" && failedAbbrev !== abbrev) {
+  if ((sport === "fantasy" || sport === "traitors") && failedAbbrev !== abbrev) {
+    const ext = sport === "traitors" ? "webp" : "jpg";
     return (
       <img
-        src={`/team_logos/fantasy/${abbrev.toLowerCase()}.jpg`}
+        src={`/team_logos/${sport}/${abbrev.toLowerCase()}.${ext}`}
         alt={label}
         className={`aspect-square rounded-full object-cover p-0 ${className ?? ""}`}
         style={style}
@@ -47,7 +48,7 @@ export default function TeamMark({
     );
   }
 
-  if (sport === "fantasy") {
+  if (sport === "fantasy" || sport === "traitors") {
     const backgroundColor = FANTASY_COLORS[abbrev] ?? "#525252";
     return (
       <span

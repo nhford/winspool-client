@@ -138,7 +138,9 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
     return <p className="my-1 px-4 text-sm sm:text-base">Loading..</p>;
   }
 
+  const isTraitors = sport === "traitors";
   const isFantasyWeek = sport === "fantasy";
+  const winsLabel = isTraitors ? "Episodes" : "Wins";
   const formLabelShort = isFantasyWeek
     ? "This week"
     : formWindow != null
@@ -155,11 +157,16 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
       ? `Record over each owner's last ${formWindow} team-games`
       : "Recent form";
 
-  const standingsSortChips: SortChipOption[] = [
-    { key: "owner", label: "Owner", natural: "asc" },
-    { key: "wins", label: "Wins", natural: "desc" },
-    { key: "recent_wins", label: formLabelShort, natural: "desc" },
-  ];
+  const standingsSortChips: SortChipOption[] = isTraitors
+    ? [
+        { key: "owner", label: "Owner", natural: "asc" },
+        { key: "wins", label: winsLabel, natural: "desc" },
+      ]
+    : [
+        { key: "owner", label: "Owner", natural: "asc" },
+        { key: "wins", label: winsLabel, natural: "desc" },
+        { key: "recent_wins", label: formLabelShort, natural: "desc" },
+      ];
 
   return (
     <div className="w-full">
@@ -175,10 +182,10 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
       <div className="w-full overflow-x-auto">
       <table className="data-table standings-table w-full md:table-fixed">
         <colgroup className="max-md:hidden">
-          <col className="w-[16%]" />
-          <col className="w-[10%]" />
-          <col className="w-[14%]" />
-          <col className="w-[60%]" />
+          <col className={isTraitors ? "w-[18%]" : "w-[16%]"} />
+          <col className={isTraitors ? "w-[14%]" : "w-[10%]"} />
+          {!isTraitors && <col className="w-[14%]" />}
+          <col className={isTraitors ? "w-[68%]" : "w-[60%]"} />
         </colgroup>
         <thead className="max-md:hidden">
           <tr className="bg-white">
@@ -196,33 +203,37 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
                 handleSort("wins", sorted, setSorted, data, setData, "desc")
               }
             >
-              Wins
+              {winsLabel}
             </th>
-            <th
-              className="cursor-pointer px-1"
-              onClick={() =>
-                handleSort(
-                  "recent_wins",
-                  sorted,
-                  setSorted,
-                  data,
-                  setData,
-                  "desc",
-                )
-              }
-              title={formTitle}
-            >
-              <span className="md:hidden">{formLabelShort}</span>
-              <span className="hidden md:inline">{formLabelLong}</span>
+            {!isTraitors && (
+              <th
+                className="cursor-pointer px-1"
+                onClick={() =>
+                  handleSort(
+                    "recent_wins",
+                    sorted,
+                    setSorted,
+                    data,
+                    setData,
+                    "desc",
+                  )
+                }
+                title={formTitle}
+              >
+                <span className="md:hidden">{formLabelShort}</span>
+                <span className="hidden md:inline">{formLabelLong}</span>
+              </th>
+            )}
+            <th className="cursor-default px-1 text-center">
+              {isTraitors ? "Players" : "Teams"}
             </th>
-            <th className="cursor-default px-1 text-center">Teams</th>
           </tr>
         </thead>
         <tbody>
           {data.map((item) => (
             <tr
               key={item.owner}
-              className="bg-white md:h-20 max-md:grid max-md:w-full max-md:grid-cols-3 max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-1.5 max-md:rounded-md max-md:px-2.5 max-md:py-2"
+              className={`bg-white md:h-20 max-md:grid max-md:w-full max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-1.5 max-md:rounded-md max-md:px-2.5 max-md:py-2 ${isTraitors ? "max-md:grid-cols-2" : "max-md:grid-cols-3"}`}
             >
               <td className="max-md:col-start-1 max-md:row-start-1 max-md:border-none max-md:p-0 max-md:text-left max-md:text-base max-md:font-semibold">
                 {item.owner}
@@ -230,9 +241,12 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
               <td className="max-md:col-start-2 max-md:row-start-1 max-md:border-none max-md:p-0">
                 <div className="flex min-h-[2.5em] flex-col items-center justify-center leading-snug">
                   <span className="text-sm">{item.wins}</span>
-                  <span className="-mt-0.5 text-[0.6em]">{`Games: ${item.games}`}</span>
+                  {!isTraitors && (
+                    <span className="-mt-0.5 text-[0.6em]">{`Games: ${item.games}`}</span>
+                  )}
                 </div>
               </td>
+              {!isTraitors && (
               <td className="max-md:col-start-3 max-md:row-start-1 max-md:border-none max-md:p-0">
                 <div className="flex min-h-[2.5em] flex-col items-center justify-center leading-snug">
                   <span className="text-sm">
@@ -248,7 +262,8 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
                   ) : null}
                 </div>
               </td>
-              <td className="max-md:col-span-3 max-md:row-start-2 max-md:border-none max-md:p-0">
+              )}
+              <td className={`${isTraitors ? "max-md:col-span-2" : "max-md:col-span-3"} max-md:row-start-2 max-md:border-none max-md:p-0`}>
                 <div
                   className="mx-auto grid h-11 w-full items-center justify-items-center md:h-[var(--logo-slot)] md:w-max md:justify-items-center md:gap-x-[var(--logo-gap)] [grid-template-columns:repeat(var(--team-cols),minmax(0,1fr))] md:[grid-template-columns:repeat(var(--team-cols),var(--logo-slot))]"
                   style={
@@ -272,7 +287,11 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
                           sport={sport}
                           abbrev={abbrev}
                           alt={abbrev + " Logo"}
-                          className="max-h-full max-w-full object-contain p-0.5"
+                          className={
+                            isTraitors
+                              ? "aspect-square max-h-full max-w-full rounded-full object-cover p-0.5"
+                              : "max-h-full max-w-full object-contain p-0.5"
+                          }
                           style={{
                             width: `${fitScale * 100}%`,
                             height: `${fitScale * 100}%`,
