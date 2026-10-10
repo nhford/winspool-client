@@ -23,6 +23,13 @@ function isAuctionRow(row: { price?: unknown }): boolean {
   return Number.isFinite(Number(row.price));
 }
 
+function traitorsRowTone(record: unknown): string {
+  const status = String(record ?? "").toLowerCase();
+  if (status.includes("murder")) return "bg-red-100";
+  if (status.includes("banish")) return "bg-blue-100";
+  return "bg-white";
+}
+
 function formatBid(value: unknown): string {
   const n = Number(value);
   if (!Number.isFinite(n)) return "";
@@ -279,12 +286,13 @@ export default function FullDraft({ sport, year }: FullDraftProps) {
             const bid = formatBid(row.price);
             const episodes = String(row.wins ?? "");
             const status = String(row.record ?? "");
+            const rowTone = isTraitors ? traitorsRowTone(row.record) : "bg-white";
             return (
-              <tbody key={row.abbrev} className="bg-white">
+              <tbody key={row.abbrev} className={rowTone}>
                 <tr
                   className={
                     isPlain
-                      ? "draft-main bg-white max-md:grid max-md:w-full max-md:grid-cols-[auto_1fr_auto_auto] max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-0.5 max-md:px-2.5 max-md:py-2"
+                      ? `draft-main ${rowTone} max-md:grid max-md:w-full max-md:grid-cols-[auto_1fr_auto_auto] max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-0.5 max-md:px-2.5 max-md:py-2`
                       : auction
                         ? "draft-main group cursor-pointer bg-white transition-colors hover:bg-neutral-100 max-md:grid max-md:w-full max-md:grid-cols-[auto_1fr_auto_auto_auto] max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-0.5 max-md:px-2.5 max-md:py-2"
                         : "draft-main group cursor-pointer bg-white transition-colors hover:bg-neutral-100 max-md:grid max-md:w-full max-md:grid-cols-[auto_1fr_auto_auto] max-md:grid-rows-[auto_auto] max-md:items-center max-md:gap-x-2 max-md:gap-y-0.5 max-md:px-2.5 max-md:py-2"

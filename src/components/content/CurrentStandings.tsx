@@ -1,4 +1,5 @@
 import { useLayoutEffect, useState, type CSSProperties } from "react";
+import GavelIcon from "@mui/icons-material/Gavel";
 import { usePoolData } from "../../PoolDataContext";
 import { handleSort } from "../../utils";
 import type { H2HRow, SortedState, Sport, StandingRow } from "../../types";
@@ -25,13 +26,57 @@ type CurrentStandingsProps = {
   year: number;
 };
 
+type Elimination = "banished" | "murdered";
+
+/** Longest survivors stay full size; earlier exits shrink with episodes lasted. */
+function episodeLogoScale(wins: number, maxWins: number): number {
+  if (!(maxWins > 0) || !Number.isFinite(wins)) return 1;
+  return Math.max(0.4, wins / maxWins);
+}
+
+function eliminationKind(status: string): Elimination | null {
+  const value = status.toLowerCase();
+  if (value.includes("murder")) return "murdered";
+  if (value.includes("banish")) return "banished";
+  return null;
+}
+
+function DaggerIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" className={className} fill="currentColor" aria-hidden>
+      <path d="M8 .15 9.2 9.15H6.8L8 .15z" />
+      <path d="M4.7 8.9h6.6v1.15H4.7z" />
+      <path d="M7.15 10.05h1.7V14.1c0 .48-.38.8-.85.8s-.85-.32-.85-.8v-4.05z" />
+    </svg>
+  );
+}
+
+function EliminationBadge({ fate }: { fate: Elimination }) {
+  const label = fate === "banished" ? "Banished" : "Murdered";
+  return (
+    <span
+      title={label}
+      aria-label={label}
+      className="pointer-events-none absolute bottom-0 right-0 z-10 flex h-3.5 w-3.5 translate-x-[20%] translate-y-[20%] items-center justify-center rounded-full bg-white text-neutral-800 ring-1 ring-neutral-400"
+    >
+      {fate === "banished" ? (
+        <GavelIcon sx={{ fontSize: 10 }} />
+      ) : (
+        <DaggerIcon className="h-3 w-3" />
+      )}
+    </span>
+  );
+}
+
 function buildStandings(
   year: number,
   standings: StandingRow[],
   h2h: H2HRow[],
+  scaleByEpisodes = false,
 ): {
   rows: StandingsOwnerRow[];
   logoScaleByAbbrev: Record<string, number>;
+  statusByAbbrev: Record<string, string>;
   formWindow: number | null;
   maxTeams: number;
 } {
@@ -67,11 +112,31 @@ function buildStandings(
     });
 
   const logoScaleByAbbrev: Record<string, number> = {};
+  const statusByAbbrev: Record<string, string> = {};
+  const maxWins = scaleByEpisodes
+    ? Math.max(
+        0,
+        ...yearStandings.map((team) => {
+          const wins = parseInt(String(team.wins), 10);
+          return Number.isFinite(wins) ? wins : 0;
+        }),
+      )
+    : 0;
   const byOwner = yearStandings.reduce<
     Record<string, { wins: number; games: number; teams: string[] }>
   >((acc, team) => {
-    const scale = Number(team.logo_scale);
-    logoScaleByAbbrev[team.abbrev] = Number.isFinite(scale) ? scale : 1;
+    if (scaleByEpisodes) {
+      const wins = parseInt(String(team.wins), 10);
+      logoScaleByAbbrev[team.abbrev] = episodeLogoScale(
+        Number.isFinite(wins) ? wins : 0,
+        maxWins,
+      );
+      statusByAbbrev[team.abbrev] =
+        team.record == null ? "Active" : String(team.record);
+    } else {
+      const scale = Number(team.logo_scale);
+      logoScaleByAbbrev[team.abbrev] = Number.isFinite(scale) ? scale : 1;
+    }
     if (!acc[team.owner]) {
       acc[team.owner] = { wins: 0, games: 0, teams: [] };
     }
@@ -100,7 +165,7 @@ function buildStandings(
   );
   rows.sort((a, b) => b.wins - a.wins || a.games - b.games);
 
-  return { rows, logoScaleByAbbrev, formWindow, maxTeams };
+  return { rows, logoScaleByAbbrev, statusByAbbrev, formWindow, maxTeams };
 }
 
 export default function CurrentStandings({ sport, year }: CurrentStandingsProps) {
@@ -110,6 +175,7 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
   const [logoScaleByAbbrev, setLogoScaleByAbbrev] = useState<Record<string, number>>(
     {},
   );
+  const [statusByAbbrev, setStatusByAbbrev] = useState<Record<string, string>>({});
   const [formWindow, setFormWindow] = useState<number | null>(null);
   const [maxTeams, setMaxTeams] = useState(0);
 
@@ -119,16 +185,19 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
     const {
       rows,
       logoScaleByAbbrev: scales,
+      statusByAbbrev: statuses,
       formWindow: windowSize,
       maxTeams: teamCols,
     } = buildStandings(
       year,
       payload[`${sport}_standings`] || [],
       payload[`${sport}_h2h`] || [],
+      sport === "traitors",
     );
 
     setData(rows);
     setLogoScaleByAbbrev(scales);
+    setStatusByAbbrev(statuses);
     setFormWindow(windowSize);
     setMaxTeams(teamCols);
     setSorted({ key: "wins", dir: "desc" });
@@ -278,25 +347,54 @@ export default function CurrentStandings({ sport, year }: CurrentStandingsProps)
                     const scale = logoScaleByAbbrev[abbrev] ?? 1;
                     // Cap at 1 so logo_scale can shrink sparse marks but never overflow the slot.
                     const fitScale = Math.min(Number.isFinite(scale) ? scale : 1, 1);
+                    const sizedStyle = {
+                      width: `${fitScale * 100}%`,
+                      height: `${fitScale * 100}%`,
+                    };
+                    const status = statusByAbbrev[abbrev] ?? "Active";
+                    const inactive =
+                      isTraitors && status.trim().toLowerCase() !== "active";
+                    const fate = isTraitors ? eliminationKind(status) : null;
+                    const mark = (
+                      <TeamMark
+                        sport={sport}
+                        abbrev={abbrev}
+                        alt={abbrev + " Logo"}
+                        className={
+                          isTraitors
+                            ? "aspect-square h-full w-full rounded-full object-cover p-0.5"
+                            : "max-h-full max-w-full object-contain p-0.5"
+                        }
+                        style={
+                          isTraitors
+                            ? { filter: inactive ? "grayscale(1)" : undefined }
+                            : sizedStyle
+                        }
+                      />
+                    );
                     return (
                       <div
                         key={idx}
-                        className="flex h-full min-h-0 min-w-0 w-full items-center justify-center overflow-hidden"
+                        className={`flex h-full min-h-0 min-w-0 w-full items-center justify-center ${
+                          isTraitors
+                            ? "overflow-visible [container-type:size]"
+                            : "overflow-hidden"
+                        }`}
                       >
-                        <TeamMark
-                          sport={sport}
-                          abbrev={abbrev}
-                          alt={abbrev + " Logo"}
-                          className={
-                            isTraitors
-                              ? "aspect-square max-h-full max-w-full rounded-full object-cover p-0.5"
-                              : "max-h-full max-w-full object-contain p-0.5"
-                          }
-                          style={{
-                            width: `${fitScale * 100}%`,
-                            height: `${fitScale * 100}%`,
-                          }}
-                        />
+                        {isTraitors ? (
+                          <div
+                            className="relative"
+                            style={{
+                              width: `${fitScale * 100}cqmin`,
+                              height: `${fitScale * 100}cqmin`,
+                            }}
+                          >
+                            {mark}
+                            {fate != null && <EliminationBadge fate={fate} />}
+                          </div>
+                        ) : (
+                          mark
+                        )}
                       </div>
                     );
                   })}
