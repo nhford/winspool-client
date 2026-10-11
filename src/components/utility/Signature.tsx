@@ -4,7 +4,7 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 function VenmoIcon({ className }: { className?: string }) {
   return (
     <a
-      href="https://venmo.com/Noah-Ford-57"
+      href="https://venmo.com/noahhford"
       className="inline-block text-black"
       target="_blank"
       rel="noopener noreferrer"
